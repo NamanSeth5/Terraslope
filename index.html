@@ -148,6 +148,9 @@ ne:{
  wx:"यहाँको सामान्य मौसम",lapse:"प्रति १००० मि. माथि चिसो (°से.)",wxnote:"मौसम NASA POWER तथ्याङ्क (२०२३–२०२५) हो, उचाइअनुसार {a} °से. मिलाइएको। वर्षा क्षेत्रीय औसत हो।",night:"रात °से.",day:"दिन °से.",rain:"वर्षा मि.मि.",
  foot:"यो मार्गदर्शन मात्र हो। नियमहरू ICAR सिक्किम केन्द्र र सिक्किम कृषि विभागबाट लिइएका हुन्। ढलान सीमा र १,००० मि. को रोपाइ विभाजन अनुमानित नियम हुन्। जिल्ला रेखा २०११ को हो। ठूलो निर्णय गर्नुअघि आफ्नो केभीके वा ब्लक कार्यालयसँग सोध्नुहोस्। (नेपाली अनुवाद मस्यौदा हो।)",
  mo:["जनवरी","फेब्रु","मार्च","अप्रिल","मे","जुन","जुलाई","अगस्ट","सेप्टे","अक्टो","नोभे","डिसे"],none:"कुनै छैन",dirs:["उ","उपू","पू","दपू","द","दप","प","उप"]}};
+const TN={"Gangtok":"गान्तोक","Gyalshing":"ग्यालसिङ","Namchi":"नामची","Mangan":"मङ्गन","Rangpo":"रङ्पो","Singtam":"सिंगताम","Pakyong":"पाक्योङ","Ravangla":"रावाङ्ला","Lachung":"लाचुङ","Lachen":"लाचेन","Pelling":"पेलिङ","East":"पूर्व","West":"पश्चिम","South":"दक्षिण","North":"उत्तर","East Sikkim":"पूर्व सिक्किम","West Sikkim":"पश्चिम सिक्किम","South Sikkim":"दक्षिण सिक्किम","North Sikkim":"उत्तर सिक्किम"};
+const pn=s=>lang=="ne"&&TN[s]?TN[s]:s;
+const vn=s=>lang=="ne"?s.replace("Golsey","गोलसे").replace("Seremna","सेरेम्ना").replace("Sawney","सावने").replace("Varlangey","वारलाङ्गे").replace("Ramsey","रामसे").replace("(also steep slopes)","(ठाडो भिरालोमा पनि)"):s;
 let lang="en";try{lang=localStorage.getItem("ts_lang")||"en"}catch(e){}
 const tr=(k,p)=>{let s=(T[lang][k]??T.en[k]??k);if(p)for(const x in p)s=s.split("{"+x+"}").join(p[x]);return s};
 const S={lat:null,lon:null,soil:2,ph:null,lapse:5.2};
@@ -180,9 +183,9 @@ function overlay(){
  l.strokeStyle="#ffd24a";l.lineWidth=3.2*u;GEO.forEach(f=>{path(l,f,w,h);l.stroke()});l.globalCompositeOperation="destination-out";GEO.forEach(f=>{path(l,f,w,h);l.fill()});l.globalCompositeOperation="source-over";
  l.strokeStyle="rgba(255,255,255,.9)";l.lineWidth=1*u;l.setLineDash([4*u,3*u]);GEO.forEach(f=>{path(l,f,w,h);l.stroke()});l.setLineDash([]);
  const fs=Math.max(9,10.5*u);l.font="700 "+fs+"px system-ui,sans-serif";
- GEO.forEach(f=>{const q=centroid(f);halo(l,f.name.replace(" Sikkim","").toUpperCase(),gx(q[0])/CW*w,gy(q[1])/CH*h+(f.name=="South Sikkim"?32*u:0),"center",fs)});
+ GEO.forEach(f=>{const q=centroid(f);halo(l,(lang=="ne"?pn(f.name.replace(" Sikkim","")):f.name.replace(" Sikkim","").toUpperCase()),gx(q[0])/CW*w,gy(q[1])/CH*h+(f.name=="South Sikkim"?32*u:0),"center",fs)});
  l.font="600 "+(fs*.9)+"px system-ui,sans-serif";
- TOWNS.forEach(t=>{if(t[4]===0)return;const x=gx(t[2])/CW*w,y=gy(t[1])/CH*h;l.beginPath();l.arc(x,y,2.4*u,0,6.283);l.fillStyle="#ffd24a";l.fill();l.lineWidth=1*u;l.strokeStyle="#1b251f";l.stroke();halo(l,t[0],x+(t[3]=="r"?5*u:-5*u),y+3.2*u,t[3]=="r"?"left":"right",fs*.9)});
+ TOWNS.forEach(t=>{if(t[4]===0)return;const x=gx(t[2])/CW*w,y=gy(t[1])/CH*h;l.beginPath();l.arc(x,y,2.4*u,0,6.283);l.fillStyle="#ffd24a";l.fill();l.lineWidth=1*u;l.strokeStyle="#1b251f";l.stroke();halo(l,pn(t[0]),x+(t[3]=="r"?5*u:-5*u),y+3.2*u,t[3]=="r"?"left":"right",fs*.9)});
  c.drawImage(L,0,0)}
 
 /* ---------- advice engine ---------- */
@@ -200,12 +203,12 @@ function evalCrop(id,c){
  if(id=="ginger"){
   R.push(ph==null?tr("limeGu"):ph<6.0?tr("limeG"):tr("limeGok"));
   R.push(tr("warmG",{m:list(tm,v=>v>=15)}));R.push(tr("bedG"));R.push(tr("rotG"));
-  const w={"East Sikkim":"w_bw","South Sikkim":"w_rot","West Sikkim":"w_sb"}[c.dist];if(w)R.push(tr("watch",{d:c.dist,x:tr(w)}))}
+  const w={"East Sikkim":"w_bw","South Sikkim":"w_rot","West Sikkim":"w_sb"}[c.dist];if(w)R.push(tr("watch",{d:pn(c.dist),x:tr(w)}))}
  if(id=="cardamom"){
   R.push(tr("noLime"));if(ph!=null){if(ph>6.0)add(1,tr("phHi",{p:ph.toFixed(1)}));else if(ph<4.5)add(1,tr("phLo",{p:ph.toFixed(1)}))}
   if(tot<3000)R.push(tr("rainC",{r:Math.round(tot/10)*10}));
   const fr=list(tn,v=>v<2);R.push(fr==tr("none")?tr("nofrostC"):tr("frostC",{m:fr}));
-  R.push(tr("varC",{v:c.e<975?"Golsey, Seremna":c.e<=1500?"Sawney, Varlangey":"Ramsey (also steep slopes), Sawney, Varlangey"}));R.push(tr("chirke"))}
+  R.push(tr("varC",{v:vn(c.e<975?"Golsey, Seremna":c.e<=1500?"Sawney, Varlangey":"Ramsey (also steep slopes), Sawney, Varlangey")}));R.push(tr("chirke"))}
  if(id=="maize"){
   R.push(ph==null?tr("limeMu"):ph<5.5?tr("limeM"):tr("limeMok"));
   R.push(tr("nightM",{m:list(tn,v=>v>=15.6)}));R.push(tr("hailM"))}
@@ -222,8 +225,8 @@ function render(){
  const col=Math.floor(gx(S.lon)),row=Math.floor(gy(S.lat));
  const dist=districtAt(S.lon,S.lat),nt=nearestTown(S.lat,S.lon);
  const ok=col>=0&&row>=0&&col<CW&&row<CH&&elev[row*CW+col]>0;
- $("where").textContent=dist?tr("inDist",{d:dist.replace(" Sikkim",""),t:nt[0],k:Math.max(1,Math.round(nt[1]))}):tr("out");
- if(!ok){$("facts").innerHTML="";$("pin").hidden=true;box.innerHTML='<p class="empty">'+tr("nodata")+"</p>";$("wxd").hidden=true;return}
+ $("where").textContent=dist?tr("inDist",{d:pn(dist.replace(" Sikkim","")),t:pn(nt[0]),k:Math.max(1,Math.round(nt[1]))}):tr("out");
+ if(!ok||!dist){$("facts").innerHTML="";$("pin").hidden=true;box.innerHTML='<p class="empty">'+(dist?tr("nodata"):tr("out"))+"</p>";$("wxd").hidden=true;return}
  const i=row*CW+col,e=elev[i],s=slope[i],a=asp[i]*2;
  $("pin").hidden=false;$("pin").style.left=((col+.5)/CW*100)+"%";$("pin").style.top=((row+.5)/CH*100)+"%";
  const dirs=T[lang].dirs;
@@ -250,9 +253,9 @@ function labels(){
  document.documentElement.lang=lang=="ne"?"ne":"en";
  $("tag").textContent=tr("tag");$("t_s1").textContent=tr("s1");$("t_s2").textContent=tr("s2");$("t_s3").textContent=tr("s3");$("gps").textContent=tr("gps");
  $("t_tap").textContent=tr("tap");$("ph").placeholder=tr("phPlace");$("ph").setAttribute("aria-label",tr("phPlace"));$("t_ph").textContent=tr("phHint");$("foot").textContent=tr("foot");
- const sel=$("town"),cur=sel.value;sel.innerHTML='<option value="">'+tr("town")+"</option>"+TOWNS.map((t,i)=>'<option value="'+i+'">'+t[0]+"</option>").join("");sel.value=cur;
+ const sel=$("town"),cur=sel.value;sel.innerHTML='<option value="">'+tr("town")+"</option>"+TOWNS.map((t,i)=>'<option value="'+i+'">'+pn(t[0])+"</option>").join("");sel.value=cur;
  $("seg").innerHTML=[0,1,2].map(i=>'<button data-i="'+i+'" aria-pressed="'+(S.soil==i&&S.ph==null)+'">'+tr("soil"+i)+"</button>").join("");
- $("lEn").setAttribute("aria-pressed",lang=="en");$("lNe").setAttribute("aria-pressed",lang=="ne");render()}
+ $("lEn").setAttribute("aria-pressed",lang=="en");$("lNe").setAttribute("aria-pressed",lang=="ne");if(ready)overlay();render()}
 $("seg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;S.soil=+b.dataset.i;S.ph=null;$("ph").value="";labels()});
 $("ph").addEventListener("input",()=>{const v=parseFloat($("ph").value);S.ph=isNaN(v)?null:v;labels()});
 $("town").addEventListener("change",e=>{if(e.target.value==="")return;const t=TOWNS[+e.target.value];setPlace(t[1],t[2])});
