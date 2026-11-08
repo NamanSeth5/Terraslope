@@ -7,12 +7,13 @@
 <link rel="icon" href="icon-192.png">
 <style>
 :root{--bg:#f3f5f1;--panel:#fff;--fg:#1d2a22;--muted:#5d6b62;--line:#d6ddd5;--accent:#2f6b4a;--accent-fg:#fff;
---good:#1f7a3f;--goodbg:#e2f3e6;--care:#8a5a00;--carebg:#fdf0d0;--no:#a32a2a;--nobg:#f9e1e1;--marker:#c0392b;--rain:#5b8db8}
+--good:#1f7a3f;--goodbg:#e2f3e6;--care:#8a5a00;--carebg:#fdf0d0;--no:#a32a2a;--nobg:#f9e1e1;--marker:#c0392b;--rain:#5b8db8;--ks:#2f6b4a;--ksb:#e3f1e8;--kn:#2a5f8f;--knb:#e3edf7;--kw:#9a4d00;--kwb:#fdecd0}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121a15;--panel:#1b251f;--fg:#e6ede7;--muted:#9aa89f;--line:#2e3b33;--accent:#6fbf92;--accent-fg:#0f1a14;
---good:#7fd69b;--goodbg:#193a26;--care:#f0c36a;--carebg:#40330f;--no:#f09a9a;--nobg:#471c1c;--marker:#ff6b57;--rain:#7fb0d8;color-scheme:dark}}
+--good:#7fd69b;--goodbg:#193a26;--care:#f0c36a;--carebg:#40330f;--no:#f09a9a;--nobg:#471c1c;--marker:#ff6b57;--rain:#7fb0d8;--ks:#7fd69b;--ksb:#173626;--kn:#8fc1ee;--knb:#17304a;--kw:#f0b36a;--kwb:#42300f;color-scheme:dark}}
 :root[data-theme="dark"]{--bg:#121a15;--panel:#1b251f;--fg:#e6ede7;--muted:#9aa89f;--line:#2e3b33;--accent:#6fbf92;--accent-fg:#0f1a14;
---good:#7fd69b;--goodbg:#193a26;--care:#f0c36a;--carebg:#40330f;--no:#f09a9a;--nobg:#471c1c;--marker:#ff6b57;--rain:#7fb0d8;color-scheme:dark}
+--good:#7fd69b;--goodbg:#193a26;--care:#f0c36a;--carebg:#40330f;--no:#f09a9a;--nobg:#471c1c;--marker:#ff6b57;--rain:#7fb0d8;--ks:#7fd69b;--ksb:#173626;--kn:#8fc1ee;--knb:#17304a;--kw:#f0b36a;--kwb:#42300f;color-scheme:dark}
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 body{margin:0}
 body{background:var(--bg);color:var(--fg);font:17px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans Devanagari",sans-serif;
 padding-block:14px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
@@ -24,7 +25,17 @@ h1{font-size:1.5rem;margin:0}
 .lang button{border:0;background:transparent;color:var(--accent);padding:8px 12px;font:600 .9rem inherit;font-family:inherit;cursor:pointer;min-height:40px}
 .lang button[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg)}
 .cols{display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
-@media (min-width:860px){.cols{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);align-items:start}.stick{position:sticky;top:12px}}
+@media (min-width:860px){.cols{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);align-items:start}.stick{position:sticky;top:12px}.wx4{grid-column:1/-1}}
+@media (min-width:1150px){.cols{grid-template-columns:minmax(0,.8fr) minmax(0,1.05fr) minmax(0,.85fr)}.wx4{grid-column:auto;position:sticky;top:12px}}
+.key{display:block;padding:10px 12px;border-radius:10px;margin-top:8px;border-left:6px solid var(--ks);background:var(--ksb)}
+.key .kl{display:block;margin-bottom:3px;font-weight:800;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;color:var(--ks)}
+.key .kt{font-weight:600}
+.k-soil .kt{font-size:1.04rem;font-weight:700}
+.k-now{border-color:var(--kn);background:var(--knb)}.k-now .kl{color:var(--kn)}
+.k-water{border-color:var(--kn);background:var(--knb)}.k-water .kl{color:var(--kn)}
+.k-watch{border-color:var(--kw);background:var(--kwb)}.k-watch .kl{color:var(--kw)}
+.crop ul.det{margin-top:10px;font-size:.95rem;color:var(--muted)}
+.crop li.w{color:var(--care);font-weight:600}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
 h2{font-size:1.1rem;margin:0 0 10px}
 .n{display:inline-grid;place-items:center;width:1.6em;height:1.6em;border-radius:50%;background:var(--accent);color:var(--accent-fg);font-size:.85rem;margin-right:8px}
@@ -37,6 +48,17 @@ select,input[type=number]{font:inherit;font-size:1rem;min-height:48px;padding:8p
 .seg button{font:inherit;min-height:48px;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer}
 .seg button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent);color:var(--accent-fg);font-weight:600}
 .hint{color:var(--muted);font-size:.9rem;margin:6px 0 0}
+.mapbox.zoomed{touch-action:none;cursor:grab}
+.zbtns{position:absolute;top:8px;right:8px;display:grid;gap:6px}
+.zbtns button{width:44px;height:44px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--fg);font-size:1.3rem;line-height:1;cursor:pointer}
+.actions{display:grid;gap:10px;margin-top:14px}.actions a{display:flex;align-items:center;justify-content:center;text-decoration:none}
+.cal{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px;margin-top:10px}
+.cal span{font-size:.74rem;text-align:center;padding:6px 0;border-radius:6px;background:var(--bg);color:var(--muted);border:1px solid var(--line)}
+.cal .cp{background:var(--ksb);color:var(--ks);font-weight:700;border-color:var(--ks)}.cal .cg{background:var(--knb);color:var(--kn)}.cal .ch{background:var(--kwb);color:var(--kw);font-weight:700;border-color:var(--kw)}
+.cal .cur{outline:2px solid var(--fg);outline-offset:1px}
+.calnote{font-size:.8rem;color:var(--muted);margin:5px 0 0}.calnote .cp{color:var(--ks)}.calnote .cg{color:var(--kn)}.calnote .ch{color:var(--kw)}
+details.adv{margin-top:10px}details.adv summary{font-size:.9rem;color:var(--muted)}
+
 .mapbox{position:relative;width:100%;aspect-ratio:412/454;border-radius:10px;overflow:hidden;background:var(--line);touch-action:manipulation;cursor:crosshair}
 .mapbox canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .pin{position:absolute;width:20px;height:20px;margin:-10px 0 0 -10px;border:3px solid var(--marker);border-radius:50%;box-shadow:0 0 0 2px #fff;pointer-events:none}
@@ -53,7 +75,7 @@ select,input[type=number]{font:inherit;font-size:1rem;min-height:48px;padding:8p
 .now{margin:8px 0 0;padding:8px 10px;border-radius:8px;background:var(--bg);font-size:.95rem}
 details{margin-top:12px}summary{cursor:pointer;font-weight:600;min-height:44px;display:flex;align-items:center}
 .mini{width:100%;height:auto;display:block}
-table{border-collapse:collapse;font-size:.8rem;width:100%}td,th{padding:3px 4px;text-align:right;border-bottom:1px solid var(--line)}th:first-child,td:first-child{text-align:left}
+table{border-collapse:collapse;font-size:.7rem;width:100%;table-layout:fixed}th:first-child{width:3.6em}td,th{padding:3px 2px;text-align:right;border-bottom:1px solid var(--line)}th:first-child,td:first-child{text-align:left}
 .scroll{overflow-x:auto}
 .fine{font-size:.85rem;color:var(--muted)}
 .empty{color:var(--muted);padding:12px 0}
@@ -64,7 +86,7 @@ table{border-collapse:collapse;font-size:.8rem;width:100%}td,th{padding:3px 4px;
 <div class="wrap">
  <header>
   <div><h1>Terraslope</h1><p class="tag" id="tag"></p></div>
-  <div class="lang" role="group" aria-label="Language"><button id="lEn" aria-pressed="true">EN</button><button id="lNe" aria-pressed="false">नेपाली</button></div>
+  <div class="lang" role="group" aria-label="Language"><button id="lEn" aria-pressed="true">EN</button><button id="lHi" aria-pressed="false">हिन्दी</button><button id="lNe" aria-pressed="false">नेपाली</button></div>
  </header>
  <div class="cols">
   <section class="card stick" aria-labelledby="h1">
@@ -75,7 +97,8 @@ table{border-collapse:collapse;font-size:.8rem;width:100%}td,th{padding:3px 4px;
    </div>
    <p class="hint" id="gpsmsg"></p>
    <p class="hint" id="t_tap"></p>
-   <div class="mapbox" id="mapbox"><canvas id="map" width="412" height="454"></canvas><canvas id="ov"></canvas><div class="pin" id="pin" hidden></div></div>
+   <div class="mapbox" id="mapbox"><canvas id="map"></canvas><canvas id="ov"></canvas><div class="pin" id="pin" hidden></div><div class="zbtns"><button id="zin" type="button">+</button><button id="zout" type="button">−</button><button id="zfit" type="button">⤢</button></div></div>
+   <p class="hint" id="zoomnote" hidden></p>
    <p class="where" id="where" style="margin-top:10px"></p>
    <div class="facts" id="facts"></div>
   </section>
@@ -89,9 +112,10 @@ table{border-collapse:collapse;font-size:.8rem;width:100%}td,th{padding:3px 4px;
    <section class="card" aria-labelledby="h3" aria-live="polite">
     <h2 id="h3"><span class="n">3</span><span id="t_s3"></span></h2>
     <div id="results"><p class="empty" id="t_empty"></p></div>
-    <details id="wxd" hidden><summary id="t_wx"></summary><div id="wxbody"></div></details>
+    <div class="actions"><a class="btn" id="share" target="_blank" rel="noopener" hidden></a><a class="btn alt" id="fb" target="_blank" rel="noopener" hidden></a></div>
    </section>
   </div>
+  <section class="card wx4" aria-labelledby="h4"><h2 id="h4"><span class="n">4</span><span id="t_wx"></span></h2><div id="wxbody"></div></section>
  </div>
  <p class="fine" id="foot"></p>
 </div>
@@ -103,7 +127,7 @@ const TOWNS=[["Gangtok",27.33,88.61,"r"],["Gyalshing",27.29,88.26,"l"],["Namchi"
 const WX={"NE":{"elev":3286.7,"tmean":[0.7,1.1,3.8,7.0,9.7,13.3,14.1,13.7,12.6,9.3,5.5,2.9],"tmin":[-3.3,-3.2,-0.4,2.3,5.5,9.6,10.9,10.5,9.4,6.0,2.3,-0.7],"tmax":[7.0,7.5,10.0,13.0,14.7,17.6,17.7,17.4,16.6,13.7,10.7,8.9],"rain":[4.0,18.0,81.0,94.0,172.0,384.0,378.0,318.0,305.0,116.0,14.0,4.0],"rh":[68.3,69.1,69.1,68.7,80.3,86.5,90.8,91.2,89.0,86.6,80.3,68.1]},"NW":{"elev":3532.5,"tmean":[-1.7,-1.3,1.3,4.9,7.8,11.1,12.1,11.9,10.8,7.3,3.6,0.6],"tmin":[-5.9,-5.9,-3.7,0.2,3.7,7.5,9.2,9.0,7.8,4.3,0.2,-3.4],"tmax":[4.7,5.3,7.5,10.5,12.4,15.2,15.4,15.3,14.4,11.6,8.6,6.5],"rain":[3.0,16.0,78.0,82.0,166.0,390.0,389.0,333.0,288.0,109.0,13.0,3.0],"rh":[69.0,69.9,72.1,69.3,82.0,87.9,92.6,92.8,91.0,87.2,81.0,67.4]},"SE":{"elev":905.0,"tmean":[11.6,13.1,17.0,20.7,21.7,23.3,23.4,23.0,22.7,19.8,16.3,13.1],"tmin":[8.2,8.8,12.3,15.8,17.6,20.2,20.9,20.5,20.1,17.2,13.8,10.2],"tmax":[17.1,19.0,23.0,26.5,26.5,26.8,26.4,26.0,26.1,23.5,20.4,17.8],"rain":[3.0,15.0,89.0,110.0,240.0,591.0,557.0,475.0,443.0,164.0,22.0,3.0],"rh":[65.6,56.9,53.7,52.0,69.7,85.2,90.7,91.4,87.8,86.1,81.1,74.8]},"SW":{"elev":1387.9,"tmean":[11.4,13.0,16.8,20.6,21.4,23.0,22.8,22.4,22.1,19.3,15.9,12.6],"tmin":[7.8,8.6,11.7,15.2,17.1,19.7,20.3,20.0,19.6,16.7,13.2,9.5],"tmax":[17.4,19.5,23.4,26.9,26.5,26.8,25.7,25.4,25.2,22.9,20.1,17.9],"rain":[2.0,12.0,76.0,88.0,206.0,498.0,493.0,439.0,376.0,142.0,17.0,2.0],"rh":[61.6,53.3,51.3,50.0,68.3,82.8,90.7,91.6,88.5,86.1,80.8,71.4]}};
 const $=id=>document.getElementById(id);
 const T={en:{
- tag:"Crop advice for hill farms in Sikkim",s1:"Where is your farm?",gps:"Use my location",gpsWait:"Finding your location…",gpsFail:"Could not get your location. Choose a town or tap the map.",
+ tag:"Crop advice for hill farms in Sikkim",kSoil:"Soil",kWatch:"Watch out",kWater:"Water",adv:"Advanced",share:"Share on WhatsApp",fb:"Was this useful? Give feedback",gpsRough:"Location is rough (within about {a} m). Tap your exact farm on the map.",gpsOk:"Location found (within about {a} m). Tap the map to move the pin if needed.",gpsOut:"Your location is outside Sikkim. Choose a place inside the outline.",zoomNote:"Elevation and slope are averages over about 270 m, so zooming helps place the pin but does not add detail.",zIn:"Zoom in",zOut:"Zoom out",zFit:"Show whole map",cPlant:"Plant / sow",cGrow:"Growing",cHarv:"Harvest",cNoHarv:"Harvest months are not yet available for maize.",s1:"Where is your farm?",gps:"Use my location",gpsWait:"Finding your location…",gpsFail:"Could not get your location. Choose a town or tap the map.",
  town:"Or choose a town…",tap:"You can also tap the map.",s2:"What is your soil like?",s3:"Advice for this place",empty:"Choose a place in step 1 to see advice.",noneFit:"None of the three crops suit this place. More crops are planned.",
  soil0:"Acidic (pH below 5.5)",soil1:"Slightly acidic (5.5–6.5)",soil2:"Not sure",phPlace:"Or type your soil pH",phHint:"Most Sikkim soils are acidic. A Soil Health Card test gives the pH.",
  elev:"Height (m)",slope:"Slope",faces:"Faces",flat:"Flat",inDist:"{d} district, Sikkim · nearest town {t} (about {k} km)",out:"Outside Sikkim. Choose a place inside the outline.",nodata:"No data here.",
@@ -126,7 +150,7 @@ const T={en:{
  foot:"Guide only. Rules come from the ICAR Sikkim Centre and Sikkim Department of Agriculture. Slope limits and the 1,000 m sowing split are rules of thumb. District lines are the 2011 boundaries. Check with your KVK or block office before big decisions.",
  mo:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],none:"none",dirs:["N","NE","E","SE","S","SW","W","NW"]},
 ne:{
- tag:"सिक्किमका पहाडी खेतका लागि बाली सल्लाह",s1:"तपाईंको खेत कहाँ छ?",gps:"मेरो स्थान प्रयोग गर्नुहोस्",gpsWait:"स्थान खोज्दै…",gpsFail:"स्थान पाइएन। सहर छान्नुहोस् वा नक्सामा थिच्नुहोस्।",
+ tag:"सिक्किमका पहाडी खेतका लागि बाली सल्लाह",kSoil:"माटो",kWatch:"सावधान",kWater:"पानी",adv:"उन्नत",share:"व्हाट्सएपमा सेयर गर्नुहोस्",fb:"के यो उपयोगी लाग्यो? प्रतिक्रिया दिनुहोस्",gpsRough:"स्थान मोटामोटी मात्र छ (लगभग {a} मि. भित्र)। नक्सामा आफ्नो खेत ठ्याक्कै थिच्नुहोस्।",gpsOk:"स्थान भेटियो (लगभग {a} मि. भित्र)। आवश्यक परे नक्सामा थिचेर पिन सार्नुहोस्।",gpsOut:"तपाईंको स्थान सिक्किम बाहिर छ। रेखाभित्रको ठाउँ छान्नुहोस्।",zoomNote:"उचाइ र ढलान लगभग २७० मि. को औसत हुन्, त्यसैले जुम गर्दा पिन राख्न सजिलो हुन्छ तर थप विवरण आउँदैन।",zIn:"ठूलो पार्नुहोस्",zOut:"सानो पार्नुहोस्",zFit:"पूरा नक्सा",cPlant:"रोप्ने",cGrow:"हुर्कने",cHarv:"टिप्ने",cNoHarv:"मकैको टिप्ने महिना अहिले उपलब्ध छैन।",s1:"तपाईंको खेत कहाँ छ?",gps:"मेरो स्थान प्रयोग गर्नुहोस्",gpsWait:"स्थान खोज्दै…",gpsFail:"स्थान पाइएन। सहर छान्नुहोस् वा नक्सामा थिच्नुहोस्।",
  town:"वा सहर छान्नुहोस्…",tap:"नक्सामा थिचेर पनि छान्न सकिन्छ।",s2:"तपाईंको माटो कस्तो छ?",s3:"यस ठाउँका लागि सल्लाह",empty:"सल्लाह हेर्न चरण १ मा ठाउँ छान्नुहोस्।",noneFit:"यी तीन बालीमध्ये कुनै पनि यहाँ उपयुक्त छैन। थप बाली थपिने छन्।",
  soil0:"अम्लीय (pH ५.५ भन्दा कम)",soil1:"थोरै अम्लीय (५.५–६.५)",soil2:"थाहा छैन",phPlace:"वा माटोको pH लेख्नुहोस्",phHint:"सिक्किमको धेरैजसो माटो अम्लीय छ। मृदा स्वास्थ्य कार्ड जाँचले pH दिन्छ।",
  elev:"उचाइ (मि.)",slope:"ढलान",faces:"दिशा",flat:"समतल",inDist:"{d} जिल्ला, सिक्किम · नजिकको सहर {t} (लगभग {k} कि.मि.)",out:"सिक्किम बाहिर। रेखाभित्रको ठाउँ छान्नुहोस्।",nodata:"यहाँ तथ्याङ्क छैन।",
@@ -147,13 +171,54 @@ ne:{
  nMsow:"रोप्ने राम्रो समय।",nMnext:"रोप्ने समय होइन। अर्को समय: {m}।",
  wx:"यहाँको सामान्य मौसम",lapse:"प्रति १००० मि. माथि चिसो (°से.)",wxnote:"मौसम NASA POWER तथ्याङ्क (२०२३–२०२५) हो, उचाइअनुसार {a} °से. मिलाइएको। वर्षा क्षेत्रीय औसत हो।",night:"रात °से.",day:"दिन °से.",rain:"वर्षा मि.मि.",
  foot:"यो मार्गदर्शन मात्र हो। नियमहरू ICAR सिक्किम केन्द्र र सिक्किम कृषि विभागबाट लिइएका हुन्। ढलान सीमा र १,००० मि. को रोपाइ विभाजन अनुमानित नियम हुन्। जिल्ला रेखा २०११ को हो। ठूलो निर्णय गर्नुअघि आफ्नो केभीके वा ब्लक कार्यालयसँग सोध्नुहोस्। (नेपाली अनुवाद मस्यौदा हो।)",
- mo:["जनवरी","फेब्रु","मार्च","अप्रिल","मे","जुन","जुलाई","अगस्ट","सेप्टे","अक्टो","नोभे","डिसे"],none:"कुनै छैन",dirs:["उ","उपू","पू","दपू","द","दप","प","उप"]}};
-const TN={"Gangtok":"गान्तोक","Gyalshing":"ग्यालसिङ","Namchi":"नामची","Mangan":"मङ्गन","Rangpo":"रङ्पो","Singtam":"सिंगताम","Pakyong":"पाक्योङ","Ravangla":"रावाङ्ला","Lachung":"लाचुङ","Lachen":"लाचेन","Pelling":"पेलिङ","East":"पूर्व","West":"पश्चिम","South":"दक्षिण","North":"उत्तर","East Sikkim":"पूर्व सिक्किम","West Sikkim":"पश्चिम सिक्किम","South Sikkim":"दक्षिण सिक्किम","North Sikkim":"उत्तर सिक्किम"};
-const pn=s=>lang=="ne"&&TN[s]?TN[s]:s;
-const vn=s=>lang=="ne"?s.replace("Golsey","गोलसे").replace("Seremna","सेरेम्ना").replace("Sawney","सावने").replace("Varlangey","वारलाङ्गे").replace("Ramsey","रामसे").replace("(also steep slopes)","(ठाडो भिरालोमा पनि)"):s;
+ mo:["जनवरी","फेब्रु","मार्च","अप्रिल","मे","जुन","जुलाई","अगस्ट","सेप्टे","अक्टो","नोभे","डिसे"],none:"कुनै छैन",dirs:["उ","उपू","पू","दपू","द","दप","प","उप"]},
+hi:{
+ tag:"सिक्किम के पहाड़ी खेतों के लिए फसल सलाह",s1:"आपका खेत कहाँ है?",gps:"मेरी लोकेशन इस्तेमाल करें",gpsWait:"लोकेशन खोज रहे हैं…",gpsFail:"लोकेशन नहीं मिली। शहर चुनें या नक्शे पर टैप करें।",
+ town:"या शहर चुनें…",tap:"आप नक्शे पर टैप करके भी चुन सकते हैं।",s2:"आपकी मिट्टी कैसी है?",s3:"इस जगह के लिए सलाह",empty:"सलाह देखने के लिए चरण 1 में जगह चुनें।",noneFit:"इन तीनों फसलों में से कोई भी इस जगह के लिए उपयुक्त नहीं है। और फसलें जोड़ी जाएँगी।",
+ soil0:"अम्लीय (pH 5.5 से कम)",soil1:"हल्की अम्लीय (5.5–6.5)",soil2:"पता नहीं",phPlace:"या मिट्टी का pH लिखें",phHint:"सिक्किम की ज़्यादातर मिट्टी अम्लीय है। सॉइल हेल्थ कार्ड की जाँच से pH पता चलता है।",
+ kSoil:"मिट्टी",kWatch:"सावधान",kWater:"पानी",adv:"एडवांस्ड",share:"WhatsApp पर शेयर करें",fb:"क्या यह उपयोगी था? राय दें",gpsRough:"लोकेशन मोटे तौर पर मिली है (लगभग {a} मी. के भीतर)। नक्शे पर अपना खेत ठीक से टैप करें।",gpsOk:"लोकेशन मिल गई (लगभग {a} मी. के भीतर)। ज़रूरत हो तो नक्शे पर टैप करके पिन हटाएँ।",gpsOut:"आपकी लोकेशन सिक्किम के बाहर है। रेखा के अंदर की जगह चुनें।",zoomNote:"ऊँचाई और ढलान लगभग 270 मी. का औसत हैं, इसलिए ज़ूम करने से पिन लगाना आसान होता है, पर ज़्यादा विवरण नहीं मिलता।",zIn:"बड़ा करें",zOut:"छोटा करें",zFit:"पूरा नक्शा",cPlant:"बोना / रोपना",cGrow:"बढ़वार",cHarv:"कटाई",cNoHarv:"मक्का की कटाई के महीने अभी उपलब्ध नहीं हैं।",
+ elev:"ऊँचाई (मी.)",slope:"ढलान",faces:"दिशा",flat:"समतल",inDist:"{d} जिला, सिक्किम · नज़दीकी शहर {t} (लगभग {k} कि.मी.)",out:"सिक्किम के बाहर। रेखा के अंदर की जगह चुनें।",nodata:"यहाँ का डेटा नहीं है।",
+ v0:"अच्छा मेल",v1:"सावधानी से संभव",v2:"उपयुक्त नहीं",ginger:"अदरक",cardamom:"बड़ी इलायची",maize:"मक्का",
+ altOk:"ऊँचाई {e} मी. इसके लिए उपयुक्त है ({lo}–{hi} मी.)।",altEdge:"ऊँचाई {e} मी. इसकी सीमा के किनारे पर है ({lo}–{hi} मी.)। पहले छोटे खेत में आज़माएँ।",altOut:"ऊँचाई {e} मी. इसकी सीमा ({lo}–{hi} मी.) से बाहर है।",
+ slVs:"बहुत ढलान ({s}°)। सीढ़ीदार खेत और मिट्टी कटाव की रोकथाम चाहिए, काम करना कठिन।",slSt:"ढलान ({s}°)। सीढ़ीदार खेत या उठी हुई क्यारियाँ बनाएँ।",
+ limeG:"अम्लीय मिट्टी: डोलोमाइट 2 टन/हे. डालें।",limeGu:"सिक्किम की ज़्यादातर मिट्टी अम्लीय है। pH जाँचें, 6.0 से कम हो तो डोलोमाइट 2 टन/हे. डालें।",limeGok:"मिट्टी का pH ठीक है; चूना नहीं चाहिए।",
+ limeM:"अम्लीय मिट्टी: हर साल 250 कि.ग्रा. चूनापत्थर प्रति हे. (सस्ता) या डोलोमाइट 2 टन/हे. डालें।",limeMu:"सिक्किम की ज़्यादातर मिट्टी अम्लीय है। pH जाँचें, 5.5 से कम हो तो हर साल 250 कि.ग्रा. चूनापत्थर प्रति हे. या डोलोमाइट 2 टन/हे. डालें।",limeMok:"मिट्टी का pH ठीक है; चूना नहीं चाहिए।",
+ noLime:"चूना न डालें। इसे अम्लीय मिट्टी (pH 4.5–6.0) पसंद है।",phHi:"मिट्टी का pH {p} इसकी सीमा (4.5–6.0) से ज़्यादा है।",phLo:"मिट्टी का pH {p} इसकी सीमा (4.5–6.0) से कम है।",
+ rainC:"यहाँ उपग्रह मॉडल के अनुसार साल में लगभग {r} मि.मी. बारिश होती है, पर इसे 3,000–3,500 मि.मी. चाहिए। स्थानीय बारिश जाँचें और सूखे महीनों में सिंचाई करें।",
+ warmG:"औसत तापमान 15 °से. या ज़्यादा वाले महीने: {m}।",frostC:"2 °से. से ठंडी रातें (पाले का खतरा): {m}।",nofrostC:"पाले वाली रातों की उम्मीद नहीं है।",nightM:"रात 15.6 °से. या ज़्यादा वाले महीने: {m}। इससे ठंडे में बढ़वार धीमी होती है।",
+ hailM:"मार्च–अप्रैल के ओले छोटे पौधों को नुकसान पहुँचा सकते हैं। नीची जगह फरवरी के अंत में बोएँ, या लगभग एक महीना देर करें।",
+ rotG:"आलू, टमाटर, मिर्च, बैंगन या मूँगफली के बाद न लगाएँ। हर 2–4 साल में फसल बदलें।",bedG:"पानी निकासी के लिए लगभग 1 मी. चौड़ी और 25–30 सें.मी. ऊँची क्यारी बनाएँ।",
+ watch:"{d} में {x} से सावधान रहें।",varC:"उपयुक्त किस्में: {v}।",chirke:"चिरके या फुरके वायरस के लक्षण वाले पौधे हटा दें। साफ़ रोपण सामग्री इस्तेमाल करें।",
+ w_bw:"जीवाणु मुरझान रोग",w_rot:"कंद और आँख सड़न तथा सूत्रकृमि",w_sb:"प्ररोह छेदक कीट",
+ now:"इस महीने",nGplant:"बोने का समय (फरवरी–अप्रैल)।",nGharv:"खुदाई का समय (नवंबर–जनवरी), बोने के 8–9 महीने बाद।",nGgrow:"फसल बढ़ रही है। मल्चिंग, निराई और रोगों पर नज़र रखें।",
+ nCplant:"रोपण का समय (जून–जुलाई)।",nCharv:"कटाई का समय।",nCdry:"सूखे महीने: सिंचाई करें और नर्सरी में छाया रखें। ब्लाइट और पत्ती धब्बा रोग देखें।",nCgrow:"बढ़वार का मौसम। चिरके, फुरके और पत्ती धब्बा रोग पर नज़र रखें।",
+ nMsow:"बुवाई का अच्छा समय।",nMnext:"बुवाई का समय नहीं। अगला समय: {m}।",
+ wx:"यहाँ का सामान्य मौसम",lapse:"हर 1000 मी. ऊपर ठंडक (°से.)",wxnote:"मौसम NASA POWER डेटा (2023–2025) है, ऊँचाई के हिसाब से {a} °से. बदला गया। बारिश क्षेत्रीय औसत है।",night:"रात °से.",day:"दिन °से.",rain:"बारिश मि.मी.",
+ foot:"यह केवल मार्गदर्शन है। नियम ICAR सिक्किम केंद्र और सिक्किम कृषि विभाग से लिए गए हैं। ढलान सीमा और 1,000 मी. का बुवाई विभाजन मोटे अनुमान हैं। जिला रेखाएँ 2011 की हैं। बड़े फैसले से पहले अपने केवीके या ब्लॉक कार्यालय से पूछें। (हिंदी अनुवाद मसौदा है।)",
+ mo:["जन","फर","मार्च","अप्रै","मई","जून","जुल","अग","सित","अक्टू","नव","दिस"],none:"कोई नहीं",dirs:["उ","उपू","पू","दपू","द","दप","प","उप"]}};
+const TNne={"Gangtok":"गान्तोक","Gyalshing":"ग्यालसिङ","Namchi":"नामची","Mangan":"मङ्गन","Rangpo":"रङ्पो","Singtam":"सिंगताम","Pakyong":"पाक्योङ","Ravangla":"रावाङ्ला","Lachung":"लाचुङ","Lachen":"लाचेन","Pelling":"पेलिङ","East":"पूर्व","West":"पश्चिम","South":"दक्षिण","North":"उत्तर","East Sikkim":"पूर्व सिक्किम","West Sikkim":"पश्चिम सिक्किम","South Sikkim":"दक्षिण सिक्किम","North Sikkim":"उत्तर सिक्किम"};
+const TNhi={"Gangtok":"गंगटोक","Gyalshing":"ग्यालशिंग","Namchi":"नामची","Mangan":"मंगन","Rangpo":"रंगपो","Singtam":"सिंगताम","Pakyong":"पाकयोंग","Ravangla":"रावंगला","Lachung":"लाचुंग","Lachen":"लाचेन","Pelling":"पेलिंग","East":"पूर्व","West":"पश्चिम","South":"दक्षिण","North":"उत्तर","East Sikkim":"पूर्व सिक्किम","West Sikkim":"पश्चिम सिक्किम","South Sikkim":"दक्षिण सिक्किम","North Sikkim":"उत्तर सिक्किम"};
+const TN={ne:TNne,hi:TNhi};
+const pn=s=>(TN[lang]||{})[s]||s;
+const VN={ne:["गोलसे","सेरेम्ना","सावने","वारलाङ्गे","रामसे","(ठाडो भिरालोमा पनि)"],hi:["गोलसे","सेरेम्ना","सावने","वारलांगे","रामसे","(खड़ी ढलान पर भी)"]};
+const vn=s=>{const a=VN[lang];return a?s.replace("Golsey",a[0]).replace("Seremna",a[1]).replace("Sawney",a[2]).replace("Varlangey",a[3]).replace("Ramsey",a[4]).replace("(also steep slopes)",a[5]):s};
 let lang="en";try{lang=localStorage.getItem("ts_lang")||"en"}catch(e){}
+if(!T[lang])lang="en";
 const tr=(k,p)=>{let s=(T[lang][k]??T.en[k]??k);if(p)for(const x in p)s=s.split("{"+x+"}").join(p[x]);return s};
 const S={lat:null,lon:null,soil:2,ph:null,lapse:5.2};
+let base=null,pinOk=false;const V={x:0,y:0,z:1};let raf=0;
+const sx=(lon,w)=>(gx(lon)/CW-V.x)*V.z*w,sy=(lat,h)=>(gy(lat)/CH-V.y)*V.z*h;
+function paintMap(){const cv=$("map"),dpr=Math.min(2,window.devicePixelRatio||1),w=Math.round(cv.clientWidth*dpr),h=Math.round(cv.clientHeight*dpr);if(!w||!base)return;if(cv.width!=w||cv.height!=h){cv.width=w;cv.height=h}
+ const c=cv.getContext("2d");c.clearRect(0,0,w,h);c.imageSmoothingEnabled=true;c.imageSmoothingQuality="high";c.drawImage(base,V.x*CW,V.y*CH,CW/V.z,CH/V.z,0,0,w,h)}
+function placePin(){const p=$("pin");if(!pinOk||S.lat==null){p.hidden=true;return}const l=(gx(S.lon)/CW-V.x)*V.z,t=(gy(S.lat)/CH-V.y)*V.z;p.hidden=l<0||l>1||t<0||t>1;p.style.left=l*100+"%";p.style.top=t*100+"%"}
+function redraw(){paintMap();overlay();placePin()}
+function schedule(){if(!raf)raf=requestAnimationFrame(()=>{raf=0;redraw()})}
+function saveState(){try{localStorage.setItem("ts_state",JSON.stringify({lat:S.lat,lon:S.lon,soil:S.soil,ph:S.ph}))}catch(e){}}
+const FORM_URL="";
+function calHtml(id,cal){if(!cal)return "";const mo=T[lang].mo,cur=new Date().getMonth();
+ const cls={p:"cp",g:"cg",h:"ch","":""};let h='<div class="cal">'+cal.map((q,i)=>'<span class="'+cls[q]+(i==cur?" cur":"")+'">'+mo[i]+"</span>").join("")+"</div>";
+ h+='<p class="calnote"><span class="cp">■</span> '+tr("cPlant")+(id=="maize"?"":' · <span class="cg">■</span> '+tr("cGrow")+' · <span class="ch">■</span> '+tr("cHarv"))+(id=="maize"?" · "+tr("cNoHarv"):"")+"</p>";return h}
+
 let elev,slope,asp,ready=false,ctxo=null;
 
 /* ---------- geometry helpers ---------- */
@@ -167,13 +232,13 @@ function centroid(f){let best=null,ba=0;for(const p of f.polys){const r=p[0];let
 function ramp(e){const s=[[200,[63,107,58]],[1500,[143,163,90]],[2800,[201,179,107]],[4000,[176,138,99]],[5500,[217,212,202]],[8500,[255,255,255]]];
  if(e<=s[0][0])return s[0][1];for(let i=1;i<s.length;i++)if(e<=s[i][0]){const a=s[i-1],b=s[i],t=(e-a[0])/(b[0]-a[0]);return a[1].map((v,k)=>v+(b[1][k]-v)*t)}return s[5][1]}
 function drawMap(){
- const ctx=$("map").getContext("2d"),img=ctx.createImageData(CW,CH),d=img.data;
+ base=document.createElement("canvas");base.width=CW;base.height=CH;const ctx=base.getContext("2d"),img=ctx.createImageData(CW,CH),d=img.data;
  for(let r=0;r<CH;r++)for(let c=0;c<CW;c++){const i=r*CW+c,e=elev[i],o=i*4;if(!e){d[o+3]=0;continue}
   const e1=elev[r*CW+Math.min(CW-1,c+1)]||e,e0=elev[r*CW+Math.max(0,c-1)]||e,n1=elev[Math.max(0,r-1)*CW+c]||e,s1=elev[Math.min(CH-1,r+1)*CW+c]||e;
   let sh=0.62+(-(e1-e0)/510*0.7-(s1-n1)/540*0.7)*0.55;sh=Math.max(.35,Math.min(1.15,sh));const col=ramp(e);
   d[o]=Math.min(255,col[0]*sh);d[o+1]=Math.min(255,col[1]*sh);d[o+2]=Math.min(255,col[2]*sh);d[o+3]=255}
  ctx.putImageData(img,0,0)}
-function path(c,f,w,h){c.beginPath();for(const p of f.polys)for(const r of p){r.forEach((q,i)=>{const x=gx(q[0])/CW*w,y=gy(q[1])/CH*h;i?c.lineTo(x,y):c.moveTo(x,y)});c.closePath()}}
+function path(c,f,w,h){c.beginPath();for(const p of f.polys)for(const r of p){r.forEach((q,i)=>{const x=sx(q[0],w),y=sy(q[1],h);i?c.lineTo(x,y):c.moveTo(x,y)});c.closePath()}}
 function halo(c,t,x,y,al,sz){c.textAlign=al;c.lineWidth=sz/4;c.strokeStyle="rgba(20,30,24,.85)";c.strokeText(t,x,y);c.fillStyle="#fff";c.fillText(t,x,y)}
 function overlay(){
  const cv=$("ov"),dpr=Math.min(2,window.devicePixelRatio||1),w=cv.clientWidth*dpr,h=cv.clientHeight*dpr;if(!w)return;cv.width=w;cv.height=h;
@@ -183,9 +248,9 @@ function overlay(){
  l.strokeStyle="#ffd24a";l.lineWidth=3.2*u;GEO.forEach(f=>{path(l,f,w,h);l.stroke()});l.globalCompositeOperation="destination-out";GEO.forEach(f=>{path(l,f,w,h);l.fill()});l.globalCompositeOperation="source-over";
  l.strokeStyle="rgba(255,255,255,.9)";l.lineWidth=1*u;l.setLineDash([4*u,3*u]);GEO.forEach(f=>{path(l,f,w,h);l.stroke()});l.setLineDash([]);
  const fs=Math.max(9,10.5*u);l.font="700 "+fs+"px system-ui,sans-serif";
- GEO.forEach(f=>{const q=centroid(f);halo(l,(lang=="ne"?pn(f.name.replace(" Sikkim","")):f.name.replace(" Sikkim","").toUpperCase()),gx(q[0])/CW*w,gy(q[1])/CH*h+(f.name=="South Sikkim"?32*u:0),"center",fs)});
+ GEO.forEach(f=>{const q=centroid(f);halo(l,(lang!="en"?pn(f.name.replace(" Sikkim","")):f.name.replace(" Sikkim","").toUpperCase()),sx(q[0],w),sy(q[1],h)+(f.name=="South Sikkim"&&V.z<2?32*u:0),"center",fs)});
  l.font="600 "+(fs*.9)+"px system-ui,sans-serif";
- TOWNS.forEach(t=>{if(t[4]===0)return;const x=gx(t[2])/CW*w,y=gy(t[1])/CH*h;l.beginPath();l.arc(x,y,2.4*u,0,6.283);l.fillStyle="#ffd24a";l.fill();l.lineWidth=1*u;l.strokeStyle="#1b251f";l.stroke();halo(l,pn(t[0]),x+(t[3]=="r"?5*u:-5*u),y+3.2*u,t[3]=="r"?"left":"right",fs*.9)});
+ TOWNS.forEach(t=>{if(t[4]===0&&V.z<2)return;const x=sx(t[2],w),y=sy(t[1],h);l.beginPath();l.arc(x,y,2.4*u,0,6.283);l.fillStyle="#ffd24a";l.fill();l.lineWidth=1*u;l.strokeStyle="#1b251f";l.stroke();halo(l,pn(t[0]),x+(t[3]=="r"?5*u:-5*u),y+3.2*u,t[3]=="r"?"left":"right",fs*.9)});
  c.drawImage(L,0,0)}
 
 /* ---------- advice engine ---------- */
@@ -193,84 +258,119 @@ function weatherCell(lat,lon){return WX[(lat>=27.25?"N":"S")+(lon>=88.4375?"E":"
 function list(arr,f){const m=arr.map((v,i)=>f(v)?T[lang].mo[i]:null).filter(Boolean);return m.length?m.join(", "):tr("none")}
 function phEff(){if(S.ph!=null&&!isNaN(S.ph))return S.ph;return S.soil==0?5.0:S.soil==1?6.0:null}
 function evalCrop(id,c){
- const R=[];let lvl=0;const add=(sev,t)=>{R.push(t);lvl=Math.max(lvl,sev)};const e=Math.round(c.e),ph=c.ph;
+ const R=[],K=[];let lvl=0;const add=(sev,t)=>{R.push({t,w:1});lvl=Math.max(lvl,sev)},p=t=>R.push({t,w:0}),k=(type,t)=>K.push({type,t});const e=Math.round(c.e),ph=c.ph;
  const rng={ginger:[300,1500,300,1500],cardamom:[1000,2000,600,2200],maize:[300,2200,300,2200]}[id];
  const within=c.e>=rng[0]&&c.e<=rng[1],edge=!within&&c.e>=rng[2]&&c.e<=rng[3]&&id=="cardamom";
- if(within)R.push(tr("altOk",{e,lo:rng[0],hi:rng[1]}));else if(edge)add(1,tr("altEdge",{e,lo:rng[0],hi:rng[1]}));else add(2,tr("altOut",{e,lo:rng[0],hi:rng[1]}));
- if(lvl==2)return {lvl,R,now:null};
- if(id!="cardamom"){if(c.s>30)add(1,tr("slVs",{s:c.s}));else if(c.s>=20)R.push(tr("slSt",{s:c.s}))}
+ if(within)p(tr("altOk",{e,lo:rng[0],hi:rng[1]}));else if(edge)add(1,tr("altEdge",{e,lo:rng[0],hi:rng[1]}));else add(2,tr("altOut",{e,lo:rng[0],hi:rng[1]}));
+ if(lvl==2)return {lvl,R,K:[]};
+ if(id!="cardamom"){if(c.s>30)add(1,tr("slVs",{s:c.s}));else if(c.s>=20)p(tr("slSt",{s:c.s}))}
  const cell=c.cell,adj=(cell.elev-c.e)/1000*S.lapse,tm=cell.tmean.map(v=>v+adj),tn=cell.tmin.map(v=>v+adj),tot=cell.rain.reduce((a,b)=>a+b,0);
  if(id=="ginger"){
-  R.push(ph==null?tr("limeGu"):ph<6.0?tr("limeG"):tr("limeGok"));
-  R.push(tr("warmG",{m:list(tm,v=>v>=15)}));R.push(tr("bedG"));R.push(tr("rotG"));
-  const w={"East Sikkim":"w_bw","South Sikkim":"w_rot","West Sikkim":"w_sb"}[c.dist];if(w)R.push(tr("watch",{d:pn(c.dist),x:tr(w)}))}
+  k("soil",ph==null?tr("limeGu"):ph<6.0?tr("limeG"):tr("limeGok"));
+  p(tr("warmG",{m:list(tm,v=>v>=15)}));p(tr("bedG"));p(tr("rotG"));
+  const w={"East Sikkim":"w_bw","South Sikkim":"w_rot","West Sikkim":"w_sb"}[c.dist];if(w)k("watch",tr("watch",{d:pn(c.dist),x:tr(w)}))}
  if(id=="cardamom"){
-  R.push(tr("noLime"));if(ph!=null){if(ph>6.0)add(1,tr("phHi",{p:ph.toFixed(1)}));else if(ph<4.5)add(1,tr("phLo",{p:ph.toFixed(1)}))}
-  if(tot<3000)R.push(tr("rainC",{r:Math.round(tot/10)*10}));
-  const fr=list(tn,v=>v<2);R.push(fr==tr("none")?tr("nofrostC"):tr("frostC",{m:fr}));
-  R.push(tr("varC",{v:vn(c.e<975?"Golsey, Seremna":c.e<=1500?"Sawney, Varlangey":"Ramsey (also steep slopes), Sawney, Varlangey")}));R.push(tr("chirke"))}
+  let st=tr("noLime");if(ph!=null){if(ph>6.0){lvl=Math.max(lvl,1);st+=" "+tr("phHi",{p:ph.toFixed(1)})}else if(ph<4.5){lvl=Math.max(lvl,1);st+=" "+tr("phLo",{p:ph.toFixed(1)})}}
+  k("soil",st);if(tot<3000)k("water",tr("rainC",{r:Math.round(tot/10)*10}));
+  const fr=list(tn,v=>v<2);p(fr==tr("none")?tr("nofrostC"):tr("frostC",{m:fr}));
+  p(tr("varC",{v:vn(c.e<975?"Golsey, Seremna":c.e<=1500?"Sawney, Varlangey":"Ramsey (also steep slopes), Sawney, Varlangey")}));k("watch",tr("chirke"))}
  if(id=="maize"){
-  R.push(ph==null?tr("limeMu"):ph<5.5?tr("limeM"):tr("limeMok"));
-  R.push(tr("nightM",{m:list(tn,v=>v>=15.6)}));R.push(tr("hailM"))}
+  k("soil",ph==null?tr("limeMu"):ph<5.5?tr("limeM"):tr("limeMok"));
+  p(tr("nightM",{m:list(tn,v=>v>=15.6)}));k("watch",tr("hailM"))}
  const m=new Date().getMonth()+1;let now="";
  if(id=="ginger")now=(m>=2&&m<=4)?tr("nGplant"):(m>=11||m==1)?tr("nGharv"):tr("nGgrow");
  if(id=="cardamom")now=(m==6||m==7)?tr("nCplant"):((m==9||m==10)&&c.e<1500)||((m==11||m==12)&&c.e>=1500)?tr("nCharv"):(m>=1&&m<=3)?tr("nCdry"):tr("nCgrow");
  if(id=="maize"){const low=c.e<1000,win=low?[2,3]:[3,4],mn=T[lang].mo;const inW=win.includes(m)||(low&&(m==7||m==8));
   now=inW?tr("nMsow"):tr("nMnext",{m:low?mn[1]+"–"+mn[2]+", "+mn[6]+"–"+mn[7]:mn[2]+"–"+mn[3]})}
- return {lvl,R,now}}
+ k("now",now);const ord={soil:0,now:1,water:2,watch:3};K.sort((a,b)=>ord[a.type]-ord[b.type]);
+ const cal=[];for(let mm=1;mm<=12;mm++){let q="";
+  if(id=="ginger")q=(mm>=2&&mm<=4)?"p":(mm>=11||mm==1)?"h":"g";
+  if(id=="cardamom")q=(mm==6||mm==7)?"p":(c.e<1500?(mm==9||mm==10):(mm==11||mm==12))?"h":"g";
+  if(id=="maize")q=(c.e<1000?[2,3,7,8]:[3,4]).includes(mm)?"p":"";
+  cal.push(q)}
+ return {lvl,R,K,cal}}
 
 function render(){
  const box=$("results");
- if(S.lat==null||!ready){box.innerHTML='<p class="empty">'+tr("empty")+"</p>";$("wxd").hidden=true;return}
+ if(S.lat==null||!ready){box.innerHTML='<p class="empty">'+tr("empty")+"</p>";clearWx();return}
  const col=Math.floor(gx(S.lon)),row=Math.floor(gy(S.lat));
  const dist=districtAt(S.lon,S.lat),nt=nearestTown(S.lat,S.lon);
  const ok=col>=0&&row>=0&&col<CW&&row<CH&&elev[row*CW+col]>0;
  $("where").textContent=dist?tr("inDist",{d:pn(dist.replace(" Sikkim","")),t:pn(nt[0]),k:Math.max(1,Math.round(nt[1]))}):tr("out");
- if(!ok||!dist){$("facts").innerHTML="";$("pin").hidden=true;box.innerHTML='<p class="empty">'+(dist?tr("nodata"):tr("out"))+"</p>";$("wxd").hidden=true;return}
+ if(!ok||!dist){$("facts").innerHTML="";pinOk=false;placePin();box.innerHTML='<p class="empty">'+(dist?tr("nodata"):tr("out"))+"</p>";clearWx();return}
  const i=row*CW+col,e=elev[i],s=slope[i],a=asp[i]*2;
- $("pin").hidden=false;$("pin").style.left=((col+.5)/CW*100)+"%";$("pin").style.top=((row+.5)/CH*100)+"%";
+ pinOk=true;placePin();
  const dirs=T[lang].dirs;
  $("facts").innerHTML='<div class="fact"><b>'+e.toLocaleString("en-IN")+'</b><span>'+tr("elev")+'</span></div><div class="fact"><b>'+s+'°</b><span>'+tr("slope")+'</span></div><div class="fact"><b>'+(s<3?tr("flat"):dirs[Math.round(a/45)%8])+'</b><span>'+tr("faces")+'</span></div>';
  const cell=weatherCell(S.lat,S.lon),ctx={e,s,ph:phEff(),cell,dist};
  const res=["ginger","cardamom","maize"].map(id=>({id,r:evalCrop(id,ctx)})).sort((x,y)=>x.r.lvl-y.r.lvl);
- const none=res.every(x=>x.r.lvl==2);
- box.innerHTML=(none?'<p class="empty">'+tr("noneFit")+"</p>":"")+res.map(({id,r})=>'<div class="crop"><h3>'+tr(id)+'<span class="pill l'+r.lvl+'">'+tr("v"+r.lvl)+'</span></h3><ul>'+r.R.map(t=>"<li>"+t+"</li>").join("")+"</ul>"+(r.now?'<p class="now"><b>'+tr("now")+":</b> "+r.now+"</p>":"")+"</div>").join("");
+ const none=res.every(x=>x.r.lvl==2),kl={soil:tr("kSoil"),now:tr("now"),water:tr("kWater"),watch:tr("kWatch")};
+ box.innerHTML=(none?'<p class="empty">'+tr("noneFit")+"</p>":"")+res.map(({id,r})=>'<div class="crop"><h3>'+tr(id)+'<span class="pill l'+r.lvl+'">'+tr("v"+r.lvl)+"</span></h3>"+r.K.map(x=>'<div class="key k-'+x.type+'"><span class="kl">'+kl[x.type]+"</span><span class=\"kt\">"+x.t+"</span></div>").join("")+calHtml(id,r.cal)+'<ul class="det">'+r.R.map(x=>'<li'+(x.w?' class="w"':"")+">"+(x.w?"⚠ ":"")+x.t+"</li>").join("")+"</ul></div>").join("");
+
+ const lines=["Terraslope",$("where").textContent+" · "+tr("elev")+" "+Math.round(e)+", "+tr("slope")+" "+s+"°"];
+ res.forEach(({id,r})=>{const so=r.K.find(x=>x.type=="soil");lines.push("• "+tr(id)+": "+tr("v"+r.lvl)+(so&&r.lvl<2?" — "+so.t:""))});lines.push(location.origin+location.pathname);
+ const sh=$("share");sh.href="https://wa.me/?text="+encodeURIComponent(lines.join("\n"));sh.textContent=tr("share");sh.hidden=false;
  renderWx(cell,e)}
 
+function clearWx(){$("share").hidden=true;$("wxbody").innerHTML='<p class="empty">'+tr("empty")+"</p>"}
 function renderWx(c,e){
- const d=$("wxd");d.hidden=false;$("t_wx").textContent=tr("wx");
+ $("t_wx").textContent=tr("wx");
  const adj=(c.elev-e)/1000*S.lapse,tn=c.tmin.map(v=>v+adj),tx=c.tmax.map(v=>v+adj),tm=c.tmean.map(v=>v+adj),mo=T[lang].mo;
  const mx=Math.max(...c.rain,100);let sv='<line x1="4" y1="100" x2="316" y2="100" stroke="var(--line)"/>';
  c.rain.forEach((v,i)=>{const x=8+i*26,h=v/mx*80;sv+='<rect x="'+x+'" y="'+(100-h)+'" width="16" height="'+h+'" fill="var(--rain)" rx="2"/>'});
  const y=t=>100-(t+10)/40*80;sv+='<polyline fill="none" stroke="var(--accent)" stroke-width="2" points="'+tm.map((t,i)=>(16+i*26)+","+y(t).toFixed(1)).join(" ")+'"/>';
  const r=(n,a)=>"<tr><td>"+n+"</td>"+a.map(v=>"<td>"+Math.round(v)+"</td>").join("")+"</tr>";
- $("wxbody").innerHTML='<div class="lapse"><label for="lapse">'+tr("lapse")+'</label><input id="lapse" type="number" step="0.1" min="3" max="8" value="'+S.lapse+'"></div><svg class="mini" viewBox="0 0 320 110" role="img">'+sv+'</svg><div class="scroll"><table><tr><th></th>'+mo.map(m=>"<th>"+m.slice(0,3)+"</th>").join("")+"</tr>"+r(tr("night"),tn)+r(tr("day"),tx)+r(tr("rain"),c.rain)+'</table></div><p class="fine">'+tr("wxnote",{a:(adj>=0?"+":"")+adj.toFixed(1)})+"</p>";
+ $("wxbody").innerHTML='<svg class="mini" viewBox="0 0 320 110" role="img">'+sv+'</svg><div class="scroll"><table><tr><th></th>'+mo.map(m=>"<th>"+m.slice(0,3)+"</th>").join("")+"</tr>"+r(tr("night"),tn)+r(tr("day"),tx)+r(tr("rain"),c.rain)+'</table></div><p class="fine">'+tr("wxnote",{a:(adj>=0?"+":"")+adj.toFixed(1)})+"</p>"+'<details class="adv"><summary>'+tr("adv")+'</summary><div class="lapse"><label for="lapse">'+tr("lapse")+'</label><input id="lapse" type="number" step="0.1" min="3" max="8" value="'+S.lapse+'"></div></details>';
  $("lapse").addEventListener("change",ev=>{const v=parseFloat(ev.target.value);if(v>=3&&v<=8){S.lapse=v;render()}})}
 
 /* ---------- ui wiring ---------- */
-function setPlace(lat,lon){S.lat=lat;S.lon=lon;render()}
+function setPlace(lat,lon){S.lat=lat;S.lon=lon;saveState();render()}
 function labels(){
- document.documentElement.lang=lang=="ne"?"ne":"en";
+ document.documentElement.lang=lang;$("t_wx").textContent=tr("wx");
  $("tag").textContent=tr("tag");$("t_s1").textContent=tr("s1");$("t_s2").textContent=tr("s2");$("t_s3").textContent=tr("s3");$("gps").textContent=tr("gps");
  $("t_tap").textContent=tr("tap");$("ph").placeholder=tr("phPlace");$("ph").setAttribute("aria-label",tr("phPlace"));$("t_ph").textContent=tr("phHint");$("foot").textContent=tr("foot");
  const sel=$("town"),cur=sel.value;sel.innerHTML='<option value="">'+tr("town")+"</option>"+TOWNS.map((t,i)=>'<option value="'+i+'">'+pn(t[0])+"</option>").join("");sel.value=cur;
  $("seg").innerHTML=[0,1,2].map(i=>'<button data-i="'+i+'" aria-pressed="'+(S.soil==i&&S.ph==null)+'">'+tr("soil"+i)+"</button>").join("");
- $("lEn").setAttribute("aria-pressed",lang=="en");$("lNe").setAttribute("aria-pressed",lang=="ne");if(ready)overlay();render()}
-$("seg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;S.soil=+b.dataset.i;S.ph=null;$("ph").value="";labels()});
-$("ph").addEventListener("input",()=>{const v=parseFloat($("ph").value);S.ph=isNaN(v)?null:v;labels()});
+ $("lEn").setAttribute("aria-pressed",lang=="en");$("lNe").setAttribute("aria-pressed",lang=="ne");$("lHi").setAttribute("aria-pressed",lang=="hi");$("zin").setAttribute("aria-label",tr("zIn"));$("zout").setAttribute("aria-label",tr("zOut"));$("zfit").setAttribute("aria-label",tr("zFit"));$("fb").hidden=!FORM_URL;if(FORM_URL){$("fb").href=FORM_URL;$("fb").textContent=tr("fb")}zn();if(ready)redraw();render()}
+$("seg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;S.soil=+b.dataset.i;S.ph=null;$("ph").value="";saveState();labels()});
+$("ph").addEventListener("input",()=>{const v=parseFloat($("ph").value);S.ph=isNaN(v)?null:v;saveState();labels()});
 $("town").addEventListener("change",e=>{if(e.target.value==="")return;const t=TOWNS[+e.target.value];setPlace(t[1],t[2])});
-$("mapbox").addEventListener("click",ev=>{const r=$("mapbox").getBoundingClientRect();setPlace(Y0-(ev.clientY-r.top)/r.height*CH*D,X0+(ev.clientX-r.left)/r.width*CW*D);$("town").value=""});
+const mb=$("mapbox");
+function clampV(){const vw=1/V.z;V.x=Math.max(0,Math.min(1-vw,V.x));V.y=Math.max(0,Math.min(1-vw,V.y))}
+function zn(){mb.classList.toggle("zoomed",V.z>1.05);$("zoomnote").hidden=V.z<=1.05;$("zoomnote").textContent=tr("zoomNote")}
+function zoomAbout(z,fx,fy){z=Math.max(1,Math.min(8,z));const nx=V.x+fx/V.z,ny=V.y+fy/V.z;V.z=z;V.x=nx-fx/z;V.y=ny-fy/z;clampV();zn();schedule()}
+function setView(z,cx,cy){V.z=Math.max(1,Math.min(8,z));V.x=cx-.5/V.z;V.y=cy-.5/V.z;clampV();zn();schedule()}
+function zoomTo(lat,lon,z){setView(z,gx(lon)/CW,gy(lat)/CH)}
+function pickAt(cx,cy){const r=mb.getBoundingClientRect(),nx=V.x+((cx-r.left)/r.width)/V.z,ny=V.y+((cy-r.top)/r.height)/V.z;$("town").value="";setPlace(Y0-ny*CH*D,X0+nx*CW*D)}
+const pts=new Map();let moved=0,pinch=0;
+mb.addEventListener("pointerdown",e=>{try{mb.setPointerCapture(e.pointerId)}catch(x){}pts.set(e.pointerId,{x:e.clientX,y:e.clientY});moved=0;if(pts.size==2){const [a,b]=[...pts.values()];pinch=Math.hypot(a.x-b.x,a.y-b.y)}});
+mb.addEventListener("pointermove",e=>{const p=pts.get(e.pointerId);if(!p)return;const r=mb.getBoundingClientRect(),dx=e.clientX-p.x,dy=e.clientY-p.y;p.x=e.clientX;p.y=e.clientY;
+ if(pts.size==2){const [a,b]=[...pts.values()],d=Math.hypot(a.x-b.x,a.y-b.y);if(pinch)zoomAbout(V.z*d/pinch,((a.x+b.x)/2-r.left)/r.width,((a.y+b.y)/2-r.top)/r.height);pinch=d;moved=99;return}
+ moved+=Math.abs(dx)+Math.abs(dy);if(V.z>1.05&&moved>6){V.x-=dx/r.width/V.z;V.y-=dy/r.height/V.z;clampV();schedule()}});
+mb.addEventListener("pointerup",e=>{const was=pts.size==1&&moved<=6;pts.delete(e.pointerId);pinch=0;if(was)pickAt(e.clientX,e.clientY)});
+mb.addEventListener("pointercancel",e=>{pts.delete(e.pointerId);pinch=0});
+mb.addEventListener("wheel",e=>{e.preventDefault();const r=mb.getBoundingClientRect();zoomAbout(V.z*(e.deltaY<0?1.25:.8),(e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height)},{passive:false});
+document.querySelector(".zbtns").addEventListener("pointerdown",e=>e.stopPropagation());document.querySelector(".zbtns").addEventListener("pointerup",e=>e.stopPropagation());
+$("zin").onclick=()=>zoomAbout(V.z*1.6,.5,.5);$("zout").onclick=()=>zoomAbout(V.z/1.6,.5,.5);$("zfit").onclick=()=>setView(1,.5,.5);
 $("gps").addEventListener("click",()=>{const m=$("gpsmsg");if(!navigator.geolocation){m.textContent=tr("gpsFail");return}m.textContent=tr("gpsWait");
- navigator.geolocation.getCurrentPosition(p=>{m.textContent="";setPlace(p.coords.latitude,p.coords.longitude)},()=>{m.textContent=tr("gpsFail")},{timeout:12000,maximumAge:600000})});
+ navigator.geolocation.getCurrentPosition(p=>{const la=p.coords.latitude,lo=p.coords.longitude,acc=Math.round(p.coords.accuracy||0);$("town").value="";setPlace(la,lo);
+  if(!districtAt(lo,la)){m.textContent=tr("gpsOut");setView(1,.5,.5)}else if(acc>300){m.textContent=tr("gpsRough",{a:acc});zoomTo(la,lo,4)}else{m.textContent=tr("gpsOk",{a:acc});zoomTo(la,lo,3)}},
+  ()=>{m.textContent=tr("gpsFail")},{enableHighAccuracy:true,timeout:15000,maximumAge:0})});
+
 function setLang(l){lang=l;try{localStorage.setItem("ts_lang",l)}catch(e){}labels()}
-$("lEn").onclick=()=>setLang("en");$("lNe").onclick=()=>setLang("ne");
-let rt;window.addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(overlay,150)});
+$("lEn").onclick=()=>setLang("en");$("lNe").onclick=()=>setLang("ne");$("lHi").onclick=()=>setLang("hi");
+let rt;window.addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(redraw,150)});
 labels();
 (async()=>{try{
  const b64=await (await fetch("terrain.txt")).text(),bin=atob(b64.trim()),by=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)by[i]=bin.charCodeAt(i);
  const buf=await new Response(new Blob([by]).stream().pipeThrough(new DecompressionStream("gzip"))).arrayBuffer(),N=CW*CH;
  elev=new Uint16Array(buf,0,N);slope=new Uint8Array(buf,N*2,N);asp=new Uint8Array(buf,N*3,N);
- drawMap();overlay();ready=true;setPlace(27.33,88.61);$("town").value="0"
+ drawMap();ready=true;
+ let sv=null;try{sv=JSON.parse(localStorage.getItem("ts_state")||"null")}catch(e){}
+ if(sv&&typeof sv.lat=="number"&&typeof sv.lon=="number"){S.soil=[0,1,2].includes(sv.soil)?sv.soil:2;S.ph=typeof sv.ph=="number"?sv.ph:null;if(S.ph!=null)$("ph").value=S.ph;setPlace(sv.lat,sv.lon);
+  const ti=TOWNS.findIndex(t=>Math.abs(t[1]-sv.lat)<1e-6&&Math.abs(t[2]-sv.lon)<1e-6);$("town").value=ti>=0?String(ti):"";labels()}
+ else{setPlace(27.33,88.61);$("town").value="0"}
+ redraw()
 }catch(err){$("results").innerHTML='<p class="empty">Could not load map data. Reload to try again.</p>'}})();
 if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
 </script>
