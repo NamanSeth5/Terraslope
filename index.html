@@ -223,7 +223,7 @@ function render(){
  const dist=districtAt(S.lon,S.lat),nt=nearestTown(S.lat,S.lon);
  const ok=col>=0&&row>=0&&col<CW&&row<CH&&elev[row*CW+col]>0;
  $("where").textContent=dist?tr("inDist",{d:dist.replace(" Sikkim",""),t:nt[0],k:Math.max(1,Math.round(nt[1]))}):tr("out");
- if(!ok){$("facts").innerHTML="";$("pin").hidden=true;box.innerHTML='<p class="empty">'+tr("nodata")+"</p>";$("wxd").hidden=true;return}
+ if(!ok||!dist){$("facts").innerHTML="";$("pin").hidden=true;box.innerHTML='<p class="empty">'+(dist?tr("nodata"):tr("out"))+"</p>";$("wxd").hidden=true;return}
  const i=row*CW+col,e=elev[i],s=slope[i],a=asp[i]*2;
  $("pin").hidden=false;$("pin").style.left=((col+.5)/CW*100)+"%";$("pin").style.top=((row+.5)/CH*100)+"%";
  const dirs=T[lang].dirs;
