@@ -214,7 +214,7 @@ function placePin(){const p=$("pin");if(!pinOk||S.lat==null){p.hidden=true;retur
 function redraw(){paintMap();overlay();placePin()}
 function schedule(){if(!raf)raf=requestAnimationFrame(()=>{raf=0;redraw()})}
 function saveState(){try{localStorage.setItem("ts_state",JSON.stringify({lat:S.lat,lon:S.lon,soil:S.soil,ph:S.ph}))}catch(e){}}
-const FORM_URL="";
+const FORM_URL="https://forms.gle/myxmHyrcZznDiKXB6";
 function calHtml(id,cal){if(!cal)return "";const mo=T[lang].mo,cur=new Date().getMonth();
  const cls={p:"cp",g:"cg",h:"ch","":""};let h='<div class="cal">'+cal.map((q,i)=>'<span class="'+cls[q]+(i==cur?" cur":"")+'">'+mo[i]+"</span>").join("")+"</div>";
  h+='<p class="calnote"><span class="cp">■</span> '+tr("cPlant")+(id=="maize"?"":' · <span class="cg">■</span> '+tr("cGrow")+' · <span class="ch">■</span> '+tr("cHarv"))+(id=="maize"?" · "+tr("cNoHarv"):"")+"</p>";return h}
@@ -307,8 +307,11 @@ function render(){
  const none=res.every(x=>x.r.lvl==2),kl={soil:tr("kSoil"),now:tr("now"),water:tr("kWater"),watch:tr("kWatch")};
  box.innerHTML=(none?'<p class="empty">'+tr("noneFit")+"</p>":"")+res.map(({id,r})=>'<div class="crop"><h3>'+tr(id)+'<span class="pill l'+r.lvl+'">'+tr("v"+r.lvl)+"</span></h3>"+r.K.map(x=>'<div class="key k-'+x.type+'"><span class="kl">'+kl[x.type]+"</span><span class=\"kt\">"+x.t+"</span></div>").join("")+calHtml(id,r.cal)+'<ul class="det">'+r.R.map(x=>'<li'+(x.w?' class="w"':"")+">"+(x.w?"⚠ ":"")+x.t+"</li>").join("")+"</ul></div>").join("");
 
- const lines=["Terraslope",$("where").textContent+" · "+tr("elev")+" "+Math.round(e)+", "+tr("slope")+" "+s+"°"];
- res.forEach(({id,r})=>{const so=r.K.find(x=>x.type=="soil");lines.push("• "+tr(id)+": "+tr("v"+r.lvl)+(so&&r.lvl<2?" — "+so.t:""))});lines.push(location.origin+location.pathname);
+ const em=tr("elev").match(/^(.*?)\s*\((.*)\)/),ico=["✅","⚠️","❌"],kn={soil:tr("kSoil"),now:tr("now"),watch:tr("kWatch")};
+ const lines=["*Terraslope*","📍 "+$("where").textContent,"⛰ "+em[1]+" "+Math.round(e)+" "+em[2]+" · "+tr("slope")+" "+s+"°",""];
+ res.forEach(({id,r})=>{lines.push("*"+tr(id)+" – "+tr("v"+r.lvl)+"* "+ico[r.lvl]);
+  if(r.lvl==2)lines.push(r.R[0].t);else r.K.filter(x=>kn[x.type]).forEach(x=>lines.push("• "+kn[x.type]+": "+x.t));lines.push("")});
+ lines.push(location.origin+location.pathname);if(FORM_URL)lines.push("",tr("fb")+" "+FORM_URL);
  const sh=$("share");sh.href="https://wa.me/?text="+encodeURIComponent(lines.join("\n"));sh.textContent=tr("share");sh.hidden=false;
  renderWx(cell,e)}
 
