@@ -48,6 +48,7 @@ select,input[type=number]{font:inherit;font-size:1rem;min-height:48px;padding:8p
 .seg button{font:inherit;min-height:48px;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer}
 .seg button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent);color:var(--accent-fg);font-weight:600}
 .hint{color:var(--muted);font-size:.9rem;margin:6px 0 0}
+.sub{font-size:.95rem;margin:14px 0 6px}#fc .sub{margin-top:0}#crop{margin-bottom:12px}.pxbig{font-size:1.7rem;font-weight:800;line-height:1.2}.pxbig small{font-size:.85rem;font-weight:600;color:var(--muted)}.pxna{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-top:1px solid var(--line);color:var(--muted)}.pxna b{color:var(--fg)}#fc table{margin-top:8px}
 .mapbox.zoomed{touch-action:none;cursor:grab}
 .zbtns{position:absolute;top:8px;right:8px;display:grid;gap:6px}
 .zbtns button{width:44px;height:44px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--fg);font-size:1.3rem;line-height:1;cursor:pointer}
@@ -111,12 +112,14 @@ table{border-collapse:collapse;font-size:.7rem;width:100%;table-layout:fixed}th:
    </section>
    <section class="card" aria-labelledby="h3" aria-live="polite">
     <h2 id="h3"><span class="n">3</span><span id="t_s3"></span></h2>
+    <label class="hint" for="crop" id="t_crop" style="display:block;margin:0 0 6px"></label><select id="crop"></select>
     <div id="results"><p class="empty" id="t_empty"></p></div>
     <div class="actions"><a class="btn" id="share" target="_blank" rel="noopener" hidden></a><a class="btn alt" id="fb" target="_blank" rel="noopener" hidden></a></div>
    </section>
   </div>
-  <section class="card wx4" aria-labelledby="h4"><h2 id="h4"><span class="n">4</span><span id="t_wx"></span></h2><div id="wxbody"></div></section>
+  <section class="card wx4" aria-labelledby="h4"><h2 id="h4"><span class="n">4</span><span id="t_wx"></span></h2><div id="fc"></div><div id="wxbody"></div></section>
  </div>
+ <section class="card" aria-labelledby="h5"><h2 id="h5"><span class="n">5</span><span id="t_px"></span></h2><div id="px"></div></section>
  <p class="fine" id="foot"></p>
 </div>
 
@@ -127,7 +130,7 @@ const TOWNS=[["Gangtok",27.33,88.61,"r"],["Gyalshing",27.29,88.26,"l"],["Namchi"
 const WX={"NE":{"elev":3286.7,"tmean":[0.7,1.1,3.8,7.0,9.7,13.3,14.1,13.7,12.6,9.3,5.5,2.9],"tmin":[-3.3,-3.2,-0.4,2.3,5.5,9.6,10.9,10.5,9.4,6.0,2.3,-0.7],"tmax":[7.0,7.5,10.0,13.0,14.7,17.6,17.7,17.4,16.6,13.7,10.7,8.9],"rain":[4.0,18.0,81.0,94.0,172.0,384.0,378.0,318.0,305.0,116.0,14.0,4.0],"rh":[68.3,69.1,69.1,68.7,80.3,86.5,90.8,91.2,89.0,86.6,80.3,68.1]},"NW":{"elev":3532.5,"tmean":[-1.7,-1.3,1.3,4.9,7.8,11.1,12.1,11.9,10.8,7.3,3.6,0.6],"tmin":[-5.9,-5.9,-3.7,0.2,3.7,7.5,9.2,9.0,7.8,4.3,0.2,-3.4],"tmax":[4.7,5.3,7.5,10.5,12.4,15.2,15.4,15.3,14.4,11.6,8.6,6.5],"rain":[3.0,16.0,78.0,82.0,166.0,390.0,389.0,333.0,288.0,109.0,13.0,3.0],"rh":[69.0,69.9,72.1,69.3,82.0,87.9,92.6,92.8,91.0,87.2,81.0,67.4]},"SE":{"elev":905.0,"tmean":[11.6,13.1,17.0,20.7,21.7,23.3,23.4,23.0,22.7,19.8,16.3,13.1],"tmin":[8.2,8.8,12.3,15.8,17.6,20.2,20.9,20.5,20.1,17.2,13.8,10.2],"tmax":[17.1,19.0,23.0,26.5,26.5,26.8,26.4,26.0,26.1,23.5,20.4,17.8],"rain":[3.0,15.0,89.0,110.0,240.0,591.0,557.0,475.0,443.0,164.0,22.0,3.0],"rh":[65.6,56.9,53.7,52.0,69.7,85.2,90.7,91.4,87.8,86.1,81.1,74.8]},"SW":{"elev":1387.9,"tmean":[11.4,13.0,16.8,20.6,21.4,23.0,22.8,22.4,22.1,19.3,15.9,12.6],"tmin":[7.8,8.6,11.7,15.2,17.1,19.7,20.3,20.0,19.6,16.7,13.2,9.5],"tmax":[17.4,19.5,23.4,26.9,26.5,26.8,25.7,25.4,25.2,22.9,20.1,17.9],"rain":[2.0,12.0,76.0,88.0,206.0,498.0,493.0,439.0,376.0,142.0,17.0,2.0],"rh":[61.6,53.3,51.3,50.0,68.3,82.8,90.7,91.6,88.5,86.1,80.8,71.4]}};
 const $=id=>document.getElementById(id);
 const T={en:{
- tag:"Crop advice for hill farms in Sikkim",kSoil:"Soil",kWatch:"Watch out",kWater:"Water",adv:"Advanced",share:"Share on WhatsApp",fb:"Was this useful? Give feedback",gpsRough:"Location is rough (within about {a} m). Tap your exact farm on the map.",gpsOk:"Location found (within about {a} m). Tap the map to move the pin if needed.",gpsOut:"Your location is outside Sikkim. Choose a place inside the outline.",zoomNote:"Elevation and slope are averages over about 270 m, so zooming helps place the pin but does not add detail.",zIn:"Zoom in",zOut:"Zoom out",zFit:"Show whole map",cPlant:"Plant / sow",cGrow:"Growing",cHarv:"Harvest",cNoHarv:"Harvest months are not yet available for maize.",s1:"Where is your farm?",gps:"Use my location",gpsWait:"Finding your location…",gpsFail:"Could not get your location. Choose a town or tap the map.",
+ tag:"Crop advice for hill farms in Sikkim",kSoil:"Soil",kWatch:"Watch out",kWater:"Water",cropPick:"Choose a crop",cropAll:"All crops",pxSing:"Singtam",pxGang:"Gangtok",pxSili:"Siliguri",pxBada:"Badadana (large)",pxChota:"Chotadana (small)",pxCard:"Badadana per kg at {m}",pxCsrc:"Spices Board daily auction",rs:"Rs",pxT:"Market price (reference)",pxTyp:"Typical price per kg",pxRange:"Range {rs} {a}–{b} per kg",pxMkt:"{m} · {a} tonnes arrived",pxMktName:"Siliguri APMC, West Bengal",pxDown:"Down {p}% since {d}",pxUp:"Up {p}% since {d}",pxTrend:"Typical price per kg since {d}",pxAvg:"Monthly average (per kg)",pxNA:"Price not available yet",pxOld:"This price is {n} days old. Check today's price before you sell.",pxNote:"Ginger: Siliguri (West Bengal) is the nearest market with data on Agmarknet; Sikkim markets are not listed. Your local price will differ. Prices are typed in by hand, not live. Sources: ginger – Agmarknet (Government of India); large cardamom – Spices Board.",wxT:"Weather",fcT:"Next 7 days",fcLoad:"Loading forecast…",fcErr:"Live forecast not available (you may be offline). The typical weather below still works.",fcNone:"No weather alerts for your crops in the next 7 days.",fcFrost:"Cold nights below 2 °C expected: {d}. Large cardamom is damaged by frost, so protect young plants.",fcHeavy:"Very heavy rain (64 mm or more in a day) expected: {d}. Check drainage on beds and terraces.",fcDry:"Little rain expected in the next 7 days ({r} mm). {c}: irrigate or mulch.",fcPast:"Last 30 days: {r} mm of rain on {n} days · coldest night {c} °C",fcNote:"Forecast from Open-Meteo. Forecasts in the hills are rough and hail is not predicted. For official advice follow IMD and Sikkim agro-weather bulletins.",adv:"Advanced",share:"Share on WhatsApp",fb:"Was this useful? Give feedback",gpsRough:"Location is rough (within about {a} m). Tap your exact farm on the map.",gpsOk:"Location found (within about {a} m). Tap the map to move the pin if needed.",gpsOut:"Your location is outside Sikkim. Choose a place inside the outline.",zoomNote:"Elevation and slope are averages over about 270 m, so zooming helps place the pin but does not add detail.",zIn:"Zoom in",zOut:"Zoom out",zFit:"Show whole map",cPlant:"Plant / sow",cGrow:"Growing",cHarv:"Harvest",cNoHarv:"Harvest months are not yet available for maize.",s1:"Where is your farm?",gps:"Use my location",gpsWait:"Finding your location…",gpsFail:"Could not get your location. Choose a town or tap the map.",
  town:"Or choose a town…",tap:"You can also tap the map.",s2:"What is your soil like?",s3:"Advice for this place",empty:"Choose a place in step 1 to see advice.",noneFit:"None of the three crops suit this place. More crops are planned.",
  soil0:"Acidic (pH below 5.5)",soil1:"Slightly acidic (5.5–6.5)",soil2:"Not sure",phPlace:"Or type your soil pH",phHint:"Most Sikkim soils are acidic. A Soil Health Card test gives the pH.",
  elev:"Height (m)",slope:"Slope",faces:"Faces",flat:"Flat",inDist:"{d} district, Sikkim · nearest town {t} (about {k} km)",out:"Outside Sikkim. Choose a place inside the outline.",nodata:"No data here.",
@@ -150,7 +153,7 @@ const T={en:{
  foot:"Guide only. Rules come from the ICAR Sikkim Centre and Sikkim Department of Agriculture. Slope limits and the 1,000 m sowing split are rules of thumb. District lines are the 2011 boundaries. Check with your KVK or block office before big decisions.",
  mo:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],none:"none",dirs:["N","NE","E","SE","S","SW","W","NW"]},
 ne:{
- tag:"सिक्किमका पहाडी खेतका लागि बाली सल्लाह",kSoil:"माटो",kWatch:"सावधान",kWater:"पानी",adv:"उन्नत",share:"व्हाट्सएपमा सेयर गर्नुहोस्",fb:"के यो उपयोगी लाग्यो? प्रतिक्रिया दिनुहोस्",gpsRough:"स्थान मोटामोटी मात्र छ (लगभग {a} मि. भित्र)। नक्सामा आफ्नो खेत ठ्याक्कै थिच्नुहोस्।",gpsOk:"स्थान भेटियो (लगभग {a} मि. भित्र)। आवश्यक परे नक्सामा थिचेर पिन सार्नुहोस्।",gpsOut:"तपाईंको स्थान सिक्किम बाहिर छ। रेखाभित्रको ठाउँ छान्नुहोस्।",zoomNote:"उचाइ र ढलान लगभग २७० मि. को औसत हुन्, त्यसैले जुम गर्दा पिन राख्न सजिलो हुन्छ तर थप विवरण आउँदैन।",zIn:"ठूलो पार्नुहोस्",zOut:"सानो पार्नुहोस्",zFit:"पूरा नक्सा",cPlant:"रोप्ने",cGrow:"हुर्कने",cHarv:"टिप्ने",cNoHarv:"मकैको टिप्ने महिना अहिले उपलब्ध छैन।",s1:"तपाईंको खेत कहाँ छ?",gps:"मेरो स्थान प्रयोग गर्नुहोस्",gpsWait:"स्थान खोज्दै…",gpsFail:"स्थान पाइएन। सहर छान्नुहोस् वा नक्सामा थिच्नुहोस्।",
+ tag:"सिक्किमका पहाडी खेतका लागि बाली सल्लाह",kSoil:"माटो",kWatch:"सावधान",kWater:"पानी",cropPick:"बाली छान्नुहोस्",cropAll:"सबै बाली",pxSing:"सिङ्ताम",pxGang:"गंगटोक",pxSili:"सिलिगुडी",pxBada:"बडादाना",pxChota:"छोटादाना",pxCard:"{m} मा बडादाना, प्रति के.जी.",pxCsrc:"स्पाइसेस बोर्ड दैनिक लिलाम",rs:"रु.",pxT:"बजार भाउ (सन्दर्भका लागि)",pxTyp:"प्रति के.जी. सामान्य भाउ",pxRange:"दायरा {rs} {a}–{b} प्रति के.जी.",pxMkt:"{m} · {a} टन आवक",pxMktName:"सिलिगुडी APMC, पश्चिम बंगाल",pxDown:"{d} देखि {p}% ले घटेको",pxUp:"{d} देखि {p}% ले बढेको",pxTrend:"{d} देखिको प्रति के.जी. सामान्य भाउ",pxAvg:"मासिक औसत (प्रति के.जी.)",pxNA:"भाउ अहिले उपलब्ध छैन",pxOld:"यो भाउ {n} दिन पुरानो छ। बेच्नुअघि आजको भाउ सोध्नुहोस्।",pxNote:"सिलिगुडी (पश्चिम बंगाल) Agmarknet मा तथ्यांक भएको सबैभन्दा नजिकको बजार हो; सिक्किमका बजार सूचीमा छैनन्। तपाईंको स्थानीय भाउ फरक हुन्छ। भाउ हातले हालिएको हो, लाइभ होइन। स्रोत: अदुवा – Agmarknet (भारत सरकार); अलैंची – Spices Board।",wxT:"मौसम",fcT:"आगामी ७ दिन",fcLoad:"पूर्वानुमान लोड हुँदै…",fcErr:"लाइभ पूर्वानुमान उपलब्ध छैन (इन्टरनेट नभएको हुन सक्छ)। तलको सामान्य मौसम भने काम गर्छ।",fcNone:"आगामी ७ दिन तपाईंका बालीका लागि मौसम चेतावनी छैन।",fcFrost:"२ °से. भन्दा चिसो रात अपेक्षित: {d}। अलैंचीलाई तुषारोले बिगार्छ, साना बिरुवा जोगाउनुहोस्।",fcHeavy:"धेरै ठूलो वर्षा (दिनमा ६४ मि.मि. वा बढी) अपेक्षित: {d}। बेड र गराको पानी निकास जाँच्नुहोस्।",fcDry:"आगामी ७ दिन थोरै वर्षा अपेक्षित ({r} मि.मि.)। {c}: सिँचाइ वा मल्चिङ गर्नुहोस्।",fcPast:"पछिल्लो ३० दिन: {n} दिनमा {r} मि.मि. वर्षा · सबैभन्दा चिसो रात {c} °से.",fcNote:"पूर्वानुमान Open-Meteo बाट। पहाडमा पूर्वानुमान मोटामोटी हुन्छ र असिनाको पूर्वानुमान हुँदैन। आधिकारिक सल्लाहका लागि IMD र सिक्किम कृषि-मौसम बुलेटिन हेर्नुहोस्।",adv:"उन्नत",share:"व्हाट्सएपमा सेयर गर्नुहोस्",fb:"के यो उपयोगी लाग्यो? प्रतिक्रिया दिनुहोस्",gpsRough:"स्थान मोटामोटी मात्र छ (लगभग {a} मि. भित्र)। नक्सामा आफ्नो खेत ठ्याक्कै थिच्नुहोस्।",gpsOk:"स्थान भेटियो (लगभग {a} मि. भित्र)। आवश्यक परे नक्सामा थिचेर पिन सार्नुहोस्।",gpsOut:"तपाईंको स्थान सिक्किम बाहिर छ। रेखाभित्रको ठाउँ छान्नुहोस्।",zoomNote:"उचाइ र ढलान लगभग २७० मि. को औसत हुन्, त्यसैले जुम गर्दा पिन राख्न सजिलो हुन्छ तर थप विवरण आउँदैन।",zIn:"ठूलो पार्नुहोस्",zOut:"सानो पार्नुहोस्",zFit:"पूरा नक्सा",cPlant:"रोप्ने",cGrow:"हुर्कने",cHarv:"टिप्ने",cNoHarv:"मकैको टिप्ने महिना अहिले उपलब्ध छैन।",s1:"तपाईंको खेत कहाँ छ?",gps:"मेरो स्थान प्रयोग गर्नुहोस्",gpsWait:"स्थान खोज्दै…",gpsFail:"स्थान पाइएन। सहर छान्नुहोस् वा नक्सामा थिच्नुहोस्।",
  town:"वा सहर छान्नुहोस्…",tap:"नक्सामा थिचेर पनि छान्न सकिन्छ।",s2:"तपाईंको माटो कस्तो छ?",s3:"यस ठाउँका लागि सल्लाह",empty:"सल्लाह हेर्न चरण १ मा ठाउँ छान्नुहोस्।",noneFit:"यी तीन बालीमध्ये कुनै पनि यहाँ उपयुक्त छैन। थप बाली थपिने छन्।",
  soil0:"अम्लीय (pH ५.५ भन्दा कम)",soil1:"थोरै अम्लीय (५.५–६.५)",soil2:"थाहा छैन",phPlace:"वा माटोको pH लेख्नुहोस्",phHint:"सिक्किमको धेरैजसो माटो अम्लीय छ। मृदा स्वास्थ्य कार्ड जाँचले pH दिन्छ।",
  elev:"उचाइ (मि.)",slope:"ढलान",faces:"दिशा",flat:"समतल",inDist:"{d} जिल्ला, सिक्किम · नजिकको सहर {t} (लगभग {k} कि.मि.)",out:"सिक्किम बाहिर। रेखाभित्रको ठाउँ छान्नुहोस्।",nodata:"यहाँ तथ्याङ्क छैन।",
@@ -176,7 +179,7 @@ hi:{
  tag:"सिक्किम के पहाड़ी खेतों के लिए फसल सलाह",s1:"आपका खेत कहाँ है?",gps:"मेरी लोकेशन इस्तेमाल करें",gpsWait:"लोकेशन खोज रहे हैं…",gpsFail:"लोकेशन नहीं मिली। शहर चुनें या नक्शे पर टैप करें।",
  town:"या शहर चुनें…",tap:"आप नक्शे पर टैप करके भी चुन सकते हैं।",s2:"आपकी मिट्टी कैसी है?",s3:"इस जगह के लिए सलाह",empty:"सलाह देखने के लिए चरण 1 में जगह चुनें।",noneFit:"इन तीनों फसलों में से कोई भी इस जगह के लिए उपयुक्त नहीं है। और फसलें जोड़ी जाएँगी।",
  soil0:"अम्लीय (pH 5.5 से कम)",soil1:"हल्की अम्लीय (5.5–6.5)",soil2:"पता नहीं",phPlace:"या मिट्टी का pH लिखें",phHint:"सिक्किम की ज़्यादातर मिट्टी अम्लीय है। सॉइल हेल्थ कार्ड की जाँच से pH पता चलता है।",
- kSoil:"मिट्टी",kWatch:"सावधान",kWater:"पानी",adv:"एडवांस्ड",share:"WhatsApp पर शेयर करें",fb:"क्या यह उपयोगी था? राय दें",gpsRough:"लोकेशन मोटे तौर पर मिली है (लगभग {a} मी. के भीतर)। नक्शे पर अपना खेत ठीक से टैप करें।",gpsOk:"लोकेशन मिल गई (लगभग {a} मी. के भीतर)। ज़रूरत हो तो नक्शे पर टैप करके पिन हटाएँ।",gpsOut:"आपकी लोकेशन सिक्किम के बाहर है। रेखा के अंदर की जगह चुनें।",zoomNote:"ऊँचाई और ढलान लगभग 270 मी. का औसत हैं, इसलिए ज़ूम करने से पिन लगाना आसान होता है, पर ज़्यादा विवरण नहीं मिलता।",zIn:"बड़ा करें",zOut:"छोटा करें",zFit:"पूरा नक्शा",cPlant:"बोना / रोपना",cGrow:"बढ़वार",cHarv:"कटाई",cNoHarv:"मक्का की कटाई के महीने अभी उपलब्ध नहीं हैं।",
+ kSoil:"मिट्टी",kWatch:"सावधान",kWater:"पानी",cropPick:"फसल चुनें",cropAll:"सभी फसलें",pxSing:"सिंगताम",pxGang:"गंगटोक",pxSili:"सिलिगुड़ी",pxBada:"बड़ादाना",pxChota:"छोटादाना",pxCard:"{m} में बड़ादाना, प्रति किलो",pxCsrc:"स्पाइसेस बोर्ड की दैनिक नीलामी",rs:"₹",pxT:"बाज़ार भाव (संदर्भ के लिए)",pxTyp:"प्रति किलो सामान्य भाव",pxRange:"दायरा {rs} {a}–{b} प्रति किलो",pxMkt:"{m} · {a} टन आवक",pxMktName:"सिलिगुड़ी APMC, पश्चिम बंगाल",pxDown:"{d} से {p}% गिरा",pxUp:"{d} से {p}% बढ़ा",pxTrend:"{d} से प्रति किलो सामान्य भाव",pxAvg:"मासिक औसत (प्रति किलो)",pxNA:"भाव अभी उपलब्ध नहीं है",pxOld:"यह भाव {n} दिन पुराना है। बेचने से पहले आज का भाव पूछ लें।",pxNote:"सिलिगुड़ी (पश्चिम बंगाल) Agmarknet पर आँकड़े वाला सबसे नज़दीकी बाज़ार है; सिक्किम के बाज़ार सूची में नहीं हैं। आपके स्थानीय बाज़ार का भाव अलग होगा। भाव हाथ से डाले गए हैं, लाइव नहीं। स्रोत: अदरक – Agmarknet (भारत सरकार); इलायची – Spices Board।",wxT:"मौसम",fcT:"अगले 7 दिन",fcLoad:"पूर्वानुमान लोड हो रहा है…",fcErr:"लाइव पूर्वानुमान उपलब्ध नहीं है (शायद इंटरनेट बंद है)। नीचे सामान्य मौसम फिर भी काम करता है।",fcNone:"अगले 7 दिन आपकी फसलों के लिए कोई मौसम चेतावनी नहीं है।",fcFrost:"2 °से. से ठंडी रातें अपेक्षित: {d}। बड़ी इलायची को पाले से नुकसान होता है, छोटे पौधों को बचाएँ।",fcHeavy:"बहुत भारी बारिश (एक दिन में 64 मि.मी. या ज़्यादा) अपेक्षित: {d}। क्यारियों और खेत की सीढ़ियों में जल निकासी जाँचें।",fcDry:"अगले 7 दिन कम बारिश अपेक्षित ({r} मि.मी.)। {c}: सिंचाई या मल्चिंग करें।",fcPast:"पिछले 30 दिन: {n} दिनों में {r} मि.मी. बारिश · सबसे ठंडी रात {c} °से.",fcNote:"पूर्वानुमान Open-Meteo से। पहाड़ों में पूर्वानुमान मोटा होता है और ओलों का अनुमान नहीं होता। आधिकारिक सलाह के लिए IMD और सिक्किम कृषि-मौसम बुलेटिन देखें।",adv:"एडवांस्ड",share:"WhatsApp पर शेयर करें",fb:"क्या यह उपयोगी था? राय दें",gpsRough:"लोकेशन मोटे तौर पर मिली है (लगभग {a} मी. के भीतर)। नक्शे पर अपना खेत ठीक से टैप करें।",gpsOk:"लोकेशन मिल गई (लगभग {a} मी. के भीतर)। ज़रूरत हो तो नक्शे पर टैप करके पिन हटाएँ।",gpsOut:"आपकी लोकेशन सिक्किम के बाहर है। रेखा के अंदर की जगह चुनें।",zoomNote:"ऊँचाई और ढलान लगभग 270 मी. का औसत हैं, इसलिए ज़ूम करने से पिन लगाना आसान होता है, पर ज़्यादा विवरण नहीं मिलता।",zIn:"बड़ा करें",zOut:"छोटा करें",zFit:"पूरा नक्शा",cPlant:"बोना / रोपना",cGrow:"बढ़वार",cHarv:"कटाई",cNoHarv:"मक्का की कटाई के महीने अभी उपलब्ध नहीं हैं।",
  elev:"ऊँचाई (मी.)",slope:"ढलान",faces:"दिशा",flat:"समतल",inDist:"{d} जिला, सिक्किम · नज़दीकी शहर {t} (लगभग {k} कि.मी.)",out:"सिक्किम के बाहर। रेखा के अंदर की जगह चुनें।",nodata:"यहाँ का डेटा नहीं है।",
  v0:"अच्छा मेल",v1:"सावधानी से संभव",v2:"उपयुक्त नहीं",ginger:"अदरक",cardamom:"बड़ी इलायची",maize:"मक्का",
  altOk:"ऊँचाई {e} मी. इसके लिए उपयुक्त है ({lo}–{hi} मी.)।",altEdge:"ऊँचाई {e} मी. इसकी सीमा के किनारे पर है ({lo}–{hi} मी.)। पहले छोटे खेत में आज़माएँ।",altOut:"ऊँचाई {e} मी. इसकी सीमा ({lo}–{hi} मी.) से बाहर है।",
@@ -205,7 +208,7 @@ const vn=s=>{const a=VN[lang];return a?s.replace("Golsey",a[0]).replace("Seremna
 let lang="en";try{lang=localStorage.getItem("ts_lang")||"en"}catch(e){}
 if(!T[lang])lang="en";
 const tr=(k,p)=>{let s=(T[lang][k]??T.en[k]??k);if(p)for(const x in p)s=s.split("{"+x+"}").join(p[x]);return s};
-const S={lat:null,lon:null,soil:2,ph:null,lapse:5.2};
+const S={lat:null,lon:null,soil:2,ph:null,lapse:5.2,crop:"all"};
 let base=null,pinOk=false;const V={x:0,y:0,z:1};let raf=0;
 const sx=(lon,w)=>(gx(lon)/CW-V.x)*V.z*w,sy=(lat,h)=>(gy(lat)/CH-V.y)*V.z*h;
 function paintMap(){const cv=$("map"),dpr=Math.min(2,window.devicePixelRatio||1),w=Math.round(cv.clientWidth*dpr),h=Math.round(cv.clientHeight*dpr);if(!w||!base)return;if(cv.width!=w||cv.height!=h){cv.width=w;cv.height=h}
@@ -213,7 +216,61 @@ function paintMap(){const cv=$("map"),dpr=Math.min(2,window.devicePixelRatio||1)
 function placePin(){const p=$("pin");if(!pinOk||S.lat==null){p.hidden=true;return}const l=(gx(S.lon)/CW-V.x)*V.z,t=(gy(S.lat)/CH-V.y)*V.z;p.hidden=l<0||l>1||t<0||t>1;p.style.left=l*100+"%";p.style.top=t*100+"%"}
 function redraw(){paintMap();overlay();placePin()}
 function schedule(){if(!raf)raf=requestAnimationFrame(()=>{raf=0;redraw()})}
-function saveState(){try{localStorage.setItem("ts_state",JSON.stringify({lat:S.lat,lon:S.lon,soil:S.soil,ph:S.ph}))}catch(e){}}
+function saveState(){try{localStorage.setItem("ts_state",JSON.stringify({lat:S.lat,lon:S.lon,soil:S.soil,ph:S.ph,crop:S.crop}))}catch(e){}}
+const FC={cache:{},timer:0,seq:0};
+function fcHtml(d,ids){
+ const t=d.time,mn=d.temperature_2m_min,mx=d.temperature_2m_max,rn=d.precipitation_sum,n=t.length,p0=Math.max(0,n-7),fi=[];for(let i=p0;i<n;i++)fi.push(i);
+ const day=i=>{try{return new Date(t[i]+"T00:00:00").toLocaleDateString(lang=="en"?"en-IN":lang+"-IN",{weekday:"short",day:"numeric"})}catch(e){return t[i].slice(5)}};
+ const num=v=>v==null?"–":Math.round(v),A=[],mon=new Date().getMonth()+1;
+ const frost=fi.filter(i=>mn[i]!=null&&mn[i]<2);if(ids.includes("cardamom")&&frost.length)A.push(tr("fcFrost",{d:frost.map(day).join(", ")}));
+ const heavy=fi.filter(i=>rn[i]!=null&&rn[i]>=64.5);if(heavy.length&&ids.length)A.push(tr("fcHeavy",{d:heavy.map(day).join(", ")}));
+ const tot=fi.reduce((a,i)=>a+(rn[i]||0),0),low=(S.e||0)<1000;
+ if(tot<5){const dry=[];if(ids.includes("ginger")&&mon>=4&&mon<=10)dry.push(tr("ginger"));if(ids.includes("cardamom")&&mon>=1&&mon<=3)dry.push(tr("cardamom"));if(ids.includes("maize")&&(low?[2,3,7,8]:[3,4]).includes(mon))dry.push(tr("maize"));
+  if(dry.length)A.push(tr("fcDry",{r:Math.round(tot),c:dry.join(", ")}))}
+ let h='<h3 class="sub">'+tr("fcT")+"</h3>";
+ h+=A.length?A.map(x=>'<div class="key k-watch"><span class="kl">⚠ '+tr("kWatch")+'</span><span class="kt">'+x+"</span></div>").join(""):'<div class="key"><span class="kl">✓</span><span class="kt">'+tr("fcNone")+"</span></div>";
+ h+='<div class="scroll"><table><tr><th></th>'+fi.map(i=>"<th>"+day(i)+"</th>").join("")+"</tr><tr><td>"+tr("rain")+"</td>"+fi.map(i=>"<td>"+num(rn[i])+"</td>").join("")+"</tr><tr><td>"+tr("night")+"</td>"+fi.map(i=>"<td>"+num(mn[i])+"</td>").join("")+"</tr><tr><td>"+tr("day")+"</td>"+fi.map(i=>"<td>"+num(mx[i])+"</td>").join("")+"</tr></table></div>";
+ if(p0>0){const pi=[];for(let i=0;i<p0;i++)pi.push(i);const r=pi.reduce((a,i)=>a+(rn[i]||0),0),wet=pi.filter(i=>(rn[i]||0)>=1).length,cold=Math.min(...pi.map(i=>mn[i]==null?99:mn[i]));
+  h+='<p class="fine">'+tr("fcPast",{r:Math.round(r),n:wet,c:cold==99?"–":Math.round(cold)})+"</p>"}
+ return h+'<p class="fine">'+tr("fcNote")+"</p>"}
+function loadForecast(res){
+ const box=$("fc");clearTimeout(FC.timer);const lat=S.lat,lon=S.lon,seq=++FC.seq,key=lat.toFixed(2)+","+lon.toFixed(2),ids=res.filter(x=>x.r.lvl<2).map(x=>x.id);
+ const head='<h3 class="sub">'+tr("fcT")+"</h3>";box.innerHTML=head+'<p class="fine">'+tr("fcLoad")+"</p>";
+ const go=d=>{if(seq===FC.seq)box.innerHTML=fcHtml(d,ids)};
+ if(FC.cache[key]){go(FC.cache[key]);return}
+ FC.timer=setTimeout(async()=>{try{const ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),9000);
+  const r=await fetch("https://api.open-meteo.com/v1/forecast?latitude="+lat.toFixed(4)+"&longitude="+lon.toFixed(4)+"&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&past_days=30&forecast_days=7&timezone=Asia%2FKolkata",{signal:ctl.signal});clearTimeout(to);
+  if(!r.ok)throw 0;const j=await r.json();if(!j.daily||!j.daily.time||!j.daily.time.length)throw 0;FC.cache[key]=j.daily;go(j.daily)}
+  catch(e){if(seq===FC.seq)box.innerHTML=head+'<p class="fine">'+tr("fcErr")+"</p>"}},500)}
+const PX={cardamom:{d:"2026-11-12",pd:"2026-10-29",p:1450,r:{Singtam:[1500,1400],Gangtok:[1450,1275],Siliguri:[1600,1450]}},ginger:[["2026-08-01",45,11000,12000,11500],["2026-08-02",20,11000,12000,11500],["2026-08-03",44,11000,12000,11500],["2026-08-04",45,11000,12000,11500],["2026-08-05",40,11000,12000,11500],["2026-08-06",43,11000,12000,11500],["2026-08-07",45,11000,12000,11500],["2026-08-08",48,11000,12000,11500],["2026-08-10",45,11000,12000,11500],["2026-08-11",45,11000,12000,11500],["2026-08-12",44,11000,12000,11500],["2026-08-13",48,10500,11500,11000],["2026-08-14",48,10500,11000,10800],["2026-08-15",47,10000,11000,10500],["2026-08-17",47,10000,11000,10500],["2026-08-18",46,10500,11500,11000],["2026-08-19",44,10000,11000,10500],["2026-08-20",45,10000,11000,10500],["2026-08-21",45,10000,11000,10500],["2026-08-22",45,10000,11000,10500],["2026-08-24",46,10000,11000,10500],["2026-08-25",45,10000,11000,10500],["2026-08-26",45,10000,11000,10500],["2026-08-27",45,10000,11000,10500],["2026-08-28",46,10000,11000,10500],["2026-08-29",48,10000,11000,10500],["2026-08-31",48,10000,11000,10500],["2026-09-01",47,10000,11000,10500],["2026-09-02",50,10000,11000,10500],["2026-09-03",48,10000,11000,10500],["2026-09-04",46,10000,11000,10500],["2026-09-05",48,10000,11000,10500],["2026-09-07",48,10000,11000,10500],["2026-09-08",46,10000,11000,10500],["2026-09-09",45,10000,11000,10500],["2026-09-10",48,10000,11000,10500],["2026-09-11",46,10000,11000,10500],["2026-09-12",45,10000,11000,10500],["2026-09-14",45,10000,11000,10500],["2026-09-15",47,10000,11000,10500],["2026-09-16",46,10000,11000,10500],["2026-09-17",44,10000,11000,10500],["2026-09-18",45,10000,11000,10500],["2026-09-19",44,10000,11000,10500],["2026-09-22",47,10000,11000,10500],["2026-09-23",46,10000,11000,10500],["2026-09-24",45,10000,11000,10500],["2026-09-25",42,10000,11000,10500],["2026-09-26",47,10000,11000,10500],["2026-09-28",42,9000,10000,9500],["2026-09-29",40,9000,10000,9500],["2026-09-30",45,9000,10000,9500],["2026-10-01",42,9000,10000,9500],["2026-10-02",45,9000,10000,9500],["2026-10-03",45,9000,10000,9500],["2026-10-04",20,9000,10000,9500],["2026-10-05",48,5500,6000,5800],["2026-10-06",45,8000,9000,8500],["2026-10-07",45,8000,9000,8500],["2026-10-08",44,8000,9000,8500],["2026-10-09",48,8000,9000,8500],["2026-10-10",46,8000,9000,8500],["2026-10-12",46,8000,9000,8500],["2026-10-13",40,8000,9000,8500],["2026-10-14",42,8000,9000,8500],["2026-10-15",48,8000,9000,8500],["2026-10-16",46,8000,9000,8500],["2026-10-17",47,4500,5000,4800],["2026-10-19",48,4500,5000,4800],["2026-10-20",48,4500,5000,4800],["2026-10-21",40,4500,5000,4800],["2026-10-22",48,4500,5000,4800],["2026-10-23",42,4500,5000,4800],["2026-10-24",47,4500,5000,4800],["2026-10-26",48,4500,5000,4800],["2026-10-27",45,4500,5000,4800],["2026-10-28",45,4500,5000,4800],["2026-10-29",46,4500,5000,4800],["2026-10-30",48,4500,5000,4800],["2026-10-31",48,4500,5000,4800],["2026-11-02",48,4500,5000,4800],["2026-11-03",46,4500,5000,4800],["2026-11-04",45,4500,5000,4800],["2026-11-05",45,4500,5000,4800],["2026-11-06",50,4500,5000,4800],["2026-11-07",48,4500,5000,4800],["2026-11-09",35,4500,5000,4800],["2026-11-10",48,4500,5000,4800],["2026-11-11",42,4500,5000,4800],["2026-11-12",45,4500,5000,4800],["2026-11-13",45,4500,5000,4800],["2026-11-14",45,4500,5000,4800],["2026-11-16",42,4500,5000,4800],["2026-11-17",42,4500,5000,4800],["2026-11-18",46,4500,5000,4800]]};
+function pxHtml(){
+ const g=PX.ginger,F=g[0],L=g[g.length-1],mo=T[lang].mo,rs=tr("rs"),kg=v=>Math.round(v/100);
+ const dt=s=>{const a=s.split("-");return +a[2]+" "+mo[+a[1]-1]+" "+a[0]},ms=s=>Date.UTC(+s.slice(0,4),+s.slice(5,7)-1,+s.slice(8,10));
+ const age=Math.floor((Date.now()-Date.parse(L[0]+"T00:00:00+05:30"))/864e5),pc=Math.round(Math.abs(1-L[4]/F[4])*100);
+ const want=id=>S.crop=="all"||S.crop==id;let out="";let h='<h3 class="sub">'+tr("ginger")+"</h3>";
+ if(age>14)h+='<div class="key k-watch"><span class="kl">⚠ '+tr("kWatch")+'</span><span class="kt">'+tr("pxOld",{n:age})+"</span></div>";
+ h+='<div class="pxbig">'+rs+" "+kg(L[4])+' <small>'+tr("pxTyp")+"</small></div>";
+ h+='<p class="fine">'+tr("pxRange",{rs:rs,a:kg(L[2]),b:kg(L[3])})+" · "+dt(L[0])+"<br>"+tr("pxMkt",{m:tr("pxMktName"),a:L[1]})+"<br><b>"+tr(L[4]<F[4]?"pxDown":"pxUp",{p:pc,d:dt(F[0])})+"</b></p>";
+ const t0=ms(F[0]),t1=ms(L[0]),mx=Math.max(...g.map(r=>r[4]));
+ const X=r=>8+(ms(r[0])-t0)/(t1-t0)*304,Y=r=>100-r[4]/mx*84;
+ let sv='<line x1="4" y1="100" x2="316" y2="100" stroke="var(--line)"/><polyline fill="none" stroke="var(--accent)" stroke-width="2" points="'+g.map(r=>X(r).toFixed(1)+","+Y(r).toFixed(1)).join(" ")+'"/>';
+ sv+='<text x="8" y="12" font-size="10" fill="var(--muted)">'+kg(F[4])+'</text><text x="312" y="'+(Y(L)-5).toFixed(1)+'" font-size="10" text-anchor="end" fill="var(--muted)">'+kg(L[4])+"</text>";
+ [8,9,10,11].forEach(m=>{const x=8+(Date.UTC(2026,m-1,1)-t0)/(t1-t0)*304;sv+='<text x="'+Math.max(8,x).toFixed(1)+'" y="109" font-size="10" fill="var(--muted)">'+mo[m-1]+"</text>"});
+ h+='<svg class="mini" viewBox="0 0 320 112" role="img" aria-label="'+tr("pxTrend",{d:dt(F[0])})+'">'+sv+'</svg><p class="fine">'+tr("pxTrend",{d:dt(F[0])})+"</p>";
+ const av=[8,9,10,11].map(m=>{const r=g.filter(x=>+x[0].slice(5,7)==m);return r.reduce((a,x)=>a+x[4],0)/r.length});
+ h+='<div class="scroll"><table><tr><th>'+tr("pxAvg")+"</th>"+[8,9,10,11].map(m=>"<th>"+mo[m-1]+"</th>").join("")+"</tr><tr><td>"+rs+"</td>"+av.map(v=>"<td>"+Math.round(v/100)+"</td>").join("")+"</tr></table></div>";
+ if(want("ginger"))out+=h;h="";
+ const C=PX.cardamom,cage=Math.floor((Date.now()-Date.parse(C.d+"T00:00:00+05:30"))/864e5),cp=Math.round((C.r.Singtam[0]/C.p-1)*100),mk={Singtam:"pxSing",Gangtok:"pxGang",Siliguri:"pxSili"},n0=v=>v.toLocaleString("en-IN");
+ h+='<h3 class="sub">'+tr("cardamom")+"</h3>";
+ if(cage>14)h+='<div class="key k-watch"><span class="kl">⚠ '+tr("kWatch")+'</span><span class="kt">'+tr("pxOld",{n:cage})+"</span></div>";
+ h+='<div class="pxbig">'+rs+" "+n0(C.r.Singtam[0])+' <small>'+tr("pxCard",{m:tr("pxSing")})+"</small></div>";
+ h+='<p class="fine">'+dt(C.d)+" · "+tr("pxCsrc")+"<br><b>"+tr(cp>=0?"pxUp":"pxDown",{p:Math.abs(cp),d:dt(C.pd)})+"</b></p>";
+ h+='<div class="scroll"><table><tr><th></th><th>'+tr("pxBada")+"</th><th>"+tr("pxChota")+"</th></tr>"+Object.keys(C.r).map(k=>"<tr><td>"+tr(mk[k])+"</td><td>"+n0(C.r[k][0])+"</td><td>"+n0(C.r[k][1])+"</td></tr>").join("")+"</table></div>";
+ if(want("cardamom"))out+=h;h="";
+ h+='<div class="pxna"><b>'+tr("maize")+"</b><span>"+tr("pxNA")+"</span></div>";
+ if(want("maize"))out+=h;
+ return out+'<p class="fine">'+tr("pxNote")+"</p>"}
+function renderPx(){$("t_px").textContent=tr("pxT");$("px").innerHTML=pxHtml()}
 const FORM_URL="https://forms.gle/myxmHyrcZznDiKXB6";
 function calHtml(id,cal){if(!cal)return "";const mo=T[lang].mo,cur=new Date().getMonth();
  const cls={p:"cp",g:"cg",h:"ch","":""};let h='<div class="cal">'+cal.map((q,i)=>'<span class="'+cls[q]+(i==cur?" cur":"")+'">'+mo[i]+"</span>").join("")+"</div>";
@@ -300,41 +357,42 @@ function render(){
  if(!ok||!dist){$("facts").innerHTML="";pinOk=false;placePin();box.innerHTML='<p class="empty">'+(dist?tr("nodata"):tr("out"))+"</p>";clearWx();return}
  const i=row*CW+col,e=elev[i],s=slope[i],a=asp[i]*2;
  pinOk=true;placePin();
- const dirs=T[lang].dirs;
+ S.e=e;const dirs=T[lang].dirs;
  $("facts").innerHTML='<div class="fact"><b>'+e.toLocaleString("en-IN")+'</b><span>'+tr("elev")+'</span></div><div class="fact"><b>'+s+'°</b><span>'+tr("slope")+'</span></div><div class="fact"><b>'+(s<3?tr("flat"):dirs[Math.round(a/45)%8])+'</b><span>'+tr("faces")+'</span></div>';
  const cell=weatherCell(S.lat,S.lon),ctx={e,s,ph:phEff(),cell,dist};
  const res=["ginger","cardamom","maize"].map(id=>({id,r:evalCrop(id,ctx)})).sort((x,y)=>x.r.lvl-y.r.lvl);
- const none=res.every(x=>x.r.lvl==2),kl={soil:tr("kSoil"),now:tr("now"),water:tr("kWater"),watch:tr("kWatch")};
- box.innerHTML=(none?'<p class="empty">'+tr("noneFit")+"</p>":"")+res.map(({id,r})=>'<div class="crop"><h3>'+tr(id)+'<span class="pill l'+r.lvl+'">'+tr("v"+r.lvl)+"</span></h3>"+r.K.map(x=>'<div class="key k-'+x.type+'"><span class="kl">'+kl[x.type]+"</span><span class=\"kt\">"+x.t+"</span></div>").join("")+calHtml(id,r.cal)+'<ul class="det">'+r.R.map(x=>'<li'+(x.w?' class="w"':"")+">"+(x.w?"⚠ ":"")+x.t+"</li>").join("")+"</ul></div>").join("");
+ const vis=S.crop=="all"?res:res.filter(x=>x.id==S.crop),none=S.crop=="all"&&res.every(x=>x.r.lvl==2),kl={soil:tr("kSoil"),now:tr("now"),water:tr("kWater"),watch:tr("kWatch")};
+ box.innerHTML=(none?'<p class="empty">'+tr("noneFit")+"</p>":"")+vis.map(({id,r})=>'<div class="crop"><h3>'+tr(id)+'<span class="pill l'+r.lvl+'">'+tr("v"+r.lvl)+"</span></h3>"+r.K.map(x=>'<div class="key k-'+x.type+'"><span class="kl">'+kl[x.type]+"</span><span class=\"kt\">"+x.t+"</span></div>").join("")+calHtml(id,r.cal)+'<ul class="det">'+r.R.map(x=>'<li'+(x.w?' class="w"':"")+">"+(x.w?"⚠ ":"")+x.t+"</li>").join("")+"</ul></div>").join("");
 
  const em=tr("elev").match(/^(.*?)\s*\((.*)\)/),ico=["✅","⚠️","❌"],kn={soil:tr("kSoil"),now:tr("now"),watch:tr("kWatch")};
  const lines=["*Terraslope*","📍 "+$("where").textContent,"⛰ "+em[1]+" "+Math.round(e)+" "+em[2]+" · "+tr("slope")+" "+s+"°",""];
- res.forEach(({id,r})=>{lines.push("*"+tr(id)+" – "+tr("v"+r.lvl)+"* "+ico[r.lvl]);
+ vis.forEach(({id,r})=>{lines.push("*"+tr(id)+" – "+tr("v"+r.lvl)+"* "+ico[r.lvl]);
   if(r.lvl==2)lines.push(r.R[0].t);else r.K.filter(x=>kn[x.type]).forEach(x=>lines.push("• "+kn[x.type]+": "+x.t));lines.push("")});
  lines.push(location.origin+location.pathname);if(FORM_URL)lines.push("",tr("fb")+" "+FORM_URL);
  const sh=$("share");sh.href="https://wa.me/?text="+encodeURIComponent(lines.join("\n"));sh.textContent=tr("share");sh.hidden=false;
- renderWx(cell,e)}
+ renderWx(cell,e);loadForecast(vis)}
 
-function clearWx(){$("share").hidden=true;$("wxbody").innerHTML='<p class="empty">'+tr("empty")+"</p>"}
+function clearWx(){$("share").hidden=true;FC.seq++;clearTimeout(FC.timer);$("fc").innerHTML="";$("wxbody").innerHTML='<p class="empty">'+tr("empty")+"</p>"}
 function renderWx(c,e){
- $("t_wx").textContent=tr("wx");
+ $("t_wx").textContent=tr("wxT");
  const adj=(c.elev-e)/1000*S.lapse,tn=c.tmin.map(v=>v+adj),tx=c.tmax.map(v=>v+adj),tm=c.tmean.map(v=>v+adj),mo=T[lang].mo;
  const mx=Math.max(...c.rain,100);let sv='<line x1="4" y1="100" x2="316" y2="100" stroke="var(--line)"/>';
  c.rain.forEach((v,i)=>{const x=8+i*26,h=v/mx*80;sv+='<rect x="'+x+'" y="'+(100-h)+'" width="16" height="'+h+'" fill="var(--rain)" rx="2"/>'});
  const y=t=>100-(t+10)/40*80;sv+='<polyline fill="none" stroke="var(--accent)" stroke-width="2" points="'+tm.map((t,i)=>(16+i*26)+","+y(t).toFixed(1)).join(" ")+'"/>';
  const r=(n,a)=>"<tr><td>"+n+"</td>"+a.map(v=>"<td>"+Math.round(v)+"</td>").join("")+"</tr>";
- $("wxbody").innerHTML='<svg class="mini" viewBox="0 0 320 110" role="img">'+sv+'</svg><div class="scroll"><table><tr><th></th>'+mo.map(m=>"<th>"+m.slice(0,3)+"</th>").join("")+"</tr>"+r(tr("night"),tn)+r(tr("day"),tx)+r(tr("rain"),c.rain)+'</table></div><p class="fine">'+tr("wxnote",{a:(adj>=0?"+":"")+adj.toFixed(1)})+"</p>"+'<details class="adv"><summary>'+tr("adv")+'</summary><div class="lapse"><label for="lapse">'+tr("lapse")+'</label><input id="lapse" type="number" step="0.1" min="3" max="8" value="'+S.lapse+'"></div></details>';
+ $("wxbody").innerHTML='<h3 class="sub">'+tr("wx")+'</h3><svg class="mini" viewBox="0 0 320 110" role="img">'+sv+'</svg><div class="scroll"><table><tr><th></th>'+mo.map(m=>"<th>"+m.slice(0,3)+"</th>").join("")+"</tr>"+r(tr("night"),tn)+r(tr("day"),tx)+r(tr("rain"),c.rain)+'</table></div><p class="fine">'+tr("wxnote",{a:(adj>=0?"+":"")+adj.toFixed(1)})+"</p>"+'<details class="adv"><summary>'+tr("adv")+'</summary><div class="lapse"><label for="lapse">'+tr("lapse")+'</label><input id="lapse" type="number" step="0.1" min="3" max="8" value="'+S.lapse+'"></div></details>';
  $("lapse").addEventListener("change",ev=>{const v=parseFloat(ev.target.value);if(v>=3&&v<=8){S.lapse=v;render()}})}
 
 /* ---------- ui wiring ---------- */
 function setPlace(lat,lon){S.lat=lat;S.lon=lon;saveState();render()}
 function labels(){
- document.documentElement.lang=lang;$("t_wx").textContent=tr("wx");
+ document.documentElement.lang=lang;$("t_wx").textContent=tr("wxT");$("t_crop").textContent=tr("cropPick");$("crop").innerHTML=["all","ginger","cardamom","maize"].map(c=>'<option value="'+c+'">'+(c=="all"?tr("cropAll"):tr(c))+"</option>").join("");$("crop").value=S.crop;renderPx();
  $("tag").textContent=tr("tag");$("t_s1").textContent=tr("s1");$("t_s2").textContent=tr("s2");$("t_s3").textContent=tr("s3");$("gps").textContent=tr("gps");
  $("t_tap").textContent=tr("tap");$("ph").placeholder=tr("phPlace");$("ph").setAttribute("aria-label",tr("phPlace"));$("t_ph").textContent=tr("phHint");$("foot").textContent=tr("foot");
  const sel=$("town"),cur=sel.value;sel.innerHTML='<option value="">'+tr("town")+"</option>"+TOWNS.map((t,i)=>'<option value="'+i+'">'+pn(t[0])+"</option>").join("");sel.value=cur;
  $("seg").innerHTML=[0,1,2].map(i=>'<button data-i="'+i+'" aria-pressed="'+(S.soil==i&&S.ph==null)+'">'+tr("soil"+i)+"</button>").join("");
  $("lEn").setAttribute("aria-pressed",lang=="en");$("lNe").setAttribute("aria-pressed",lang=="ne");$("lHi").setAttribute("aria-pressed",lang=="hi");$("zin").setAttribute("aria-label",tr("zIn"));$("zout").setAttribute("aria-label",tr("zOut"));$("zfit").setAttribute("aria-label",tr("zFit"));$("fb").hidden=!FORM_URL;if(FORM_URL){$("fb").href=FORM_URL;$("fb").textContent=tr("fb")}zn();if(ready)redraw();render()}
+$("crop").addEventListener("change",e=>{S.crop=e.target.value;saveState();labels()});
 $("seg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;S.soil=+b.dataset.i;S.ph=null;$("ph").value="";saveState();labels()});
 $("ph").addEventListener("input",()=>{const v=parseFloat($("ph").value);S.ph=isNaN(v)?null:v;saveState();labels()});
 $("town").addEventListener("change",e=>{if(e.target.value==="")return;const t=TOWNS[+e.target.value];setPlace(t[1],t[2])});
@@ -370,7 +428,7 @@ labels();
  elev=new Uint16Array(buf,0,N);slope=new Uint8Array(buf,N*2,N);asp=new Uint8Array(buf,N*3,N);
  drawMap();ready=true;
  let sv=null;try{sv=JSON.parse(localStorage.getItem("ts_state")||"null")}catch(e){}
- if(sv&&typeof sv.lat=="number"&&typeof sv.lon=="number"){S.soil=[0,1,2].includes(sv.soil)?sv.soil:2;S.ph=typeof sv.ph=="number"?sv.ph:null;if(S.ph!=null)$("ph").value=S.ph;setPlace(sv.lat,sv.lon);
+ if(sv&&typeof sv.lat=="number"&&typeof sv.lon=="number"){S.soil=[0,1,2].includes(sv.soil)?sv.soil:2;S.ph=typeof sv.ph=="number"?sv.ph:null;S.crop=["all","ginger","cardamom","maize"].includes(sv.crop)?sv.crop:"all";if(S.ph!=null)$("ph").value=S.ph;setPlace(sv.lat,sv.lon);
   const ti=TOWNS.findIndex(t=>Math.abs(t[1]-sv.lat)<1e-6&&Math.abs(t[2]-sv.lon)<1e-6);$("town").value=ti>=0?String(ti):"";labels()}
  else{setPlace(27.33,88.61);$("town").value="0"}
  redraw()
